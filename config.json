@@ -20,6 +20,11 @@
       "icon": "💸",
       "label": "Richie",
       "color": "#FFD700"
+    },
+    {
+      "icon": "💔",
+      "label": "#NotTrustWorthy",
+      "color": "#FFD700"
     }
   ],
   "discord": {
