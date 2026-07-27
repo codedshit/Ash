@@ -23,8 +23,8 @@
     }
   ],
   "discord": {
-    "userId": "",
-    "enabled": false
+    "userId": "1301191057656119386",
+    "enabled": true
   },
   "effects": {
     "scrollReveal": true,
