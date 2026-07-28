@@ -32,7 +32,7 @@
   },
   "discordWidgets": {
     "profileEnabled": true,
-    "serverEnabled": false,
+    "serverEnabled": true,
     "serverId": "1527355590475776102",
     "inviteUrl": ""
   },
