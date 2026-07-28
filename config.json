@@ -94,13 +94,13 @@
     }
   },
   "appearance": {
-    "avatarSize": 154,
-    "nameSize": 36,
+    "avatarSize": 188,
+    "nameSize": 41,
     "taglineSize": 17,
-    "ringSize": 82,
-    "badgeSize": 11,
-    "fontDisplay": "Nightcore Demo",
-    "fontQuote": "Duality",
+    "ringSize": 68,
+    "badgeSize": 12,
+    "fontDisplay": "",
+    "fontQuote": "",
     "entryText": "Click to enter"
   }
 }
