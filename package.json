@@ -1,8 +1,0 @@
-{
-  "name": "ash-site-dashboard",
-  "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "octokit": "^4.0.2"
-  }
-}
