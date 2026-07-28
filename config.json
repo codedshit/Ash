@@ -18,8 +18,8 @@
   "songs": [],
   "badges": [],
   "discord": {
-    "userId": "",
-    "enabled": false,
+    "userId": "1301191057656119386",
+    "enabled": true,
     "showSpotify": true,
     "showActivity": true
   },
@@ -34,8 +34,20 @@
   "bio": {
     "about": "Tormented.",
     "rings": [
-      { "emoji": "🧊", "pct": 60, "title": "petrified", "sub": "Dont expect anything from me", "color": "rose" },
-      { "emoji": "💤", "pct": 40, "title": "sleeping", "sub": "sleeping is the key", "color": "violet" }
+      {
+        "emoji": "🧊",
+        "pct": 60,
+        "title": "petrified",
+        "sub": "Dont expect anything from me",
+        "color": "rose"
+      },
+      {
+        "emoji": "💤",
+        "pct": 40,
+        "title": "sleeping",
+        "sub": "sleeping is the key",
+        "color": "violet"
+      }
     ],
     "location": "41°36′28.4″N, 71°21′41.2″W",
     "birthdayMonth": 11,
@@ -45,15 +57,43 @@
     "lastfmUser": "Ashy-geek"
   },
   "socials": [
-    { "icon": "fab fa-discord", "label": "Discord", "url": "https://discord.com/users/codedsum" },
-    { "icon": "fab fa-github", "label": "GitHub", "url": "https://github.com/codedshit" },
-    { "icon": "fas fa-leaf", "label": "AniList", "url": "https://anilist.co/user/Klxxy/" },
-    { "icon": "fab fa-spotify", "label": "Spotify", "url": "https://open.spotify.com/user/31oyzi66p57fkbpncfhkvt2nxi2u" }
+    {
+      "icon": "fab fa-discord",
+      "label": "Discord",
+      "url": "https://discord.com/users/codedsum"
+    },
+    {
+      "icon": "fab fa-github",
+      "label": "GitHub",
+      "url": "https://github.com/codedshit"
+    },
+    {
+      "icon": "fas fa-leaf",
+      "label": "AniList",
+      "url": "https://anilist.co/user/Klxxy/"
+    },
+    {
+      "icon": "fab fa-spotify",
+      "label": "Spotify",
+      "url": "https://open.spotify.com/user/31oyzi66p57fkbpncfhkvt2nxi2u"
+    }
   ],
   "tabs": {
-    "intel": { "enabled": true, "label": "Intel", "icon": "fas fa-satellite-dish" },
-    "vibe": { "enabled": true, "label": "Vibe", "icon": "fas fa-bolt" },
-    "music": { "enabled": true, "label": "Music", "icon": "fas fa-music" }
+    "intel": {
+      "enabled": true,
+      "label": "Intel",
+      "icon": "fas fa-satellite-dish"
+    },
+    "vibe": {
+      "enabled": true,
+      "label": "Vibe",
+      "icon": "fas fa-bolt"
+    },
+    "music": {
+      "enabled": true,
+      "label": "Music",
+      "icon": "fas fa-music"
+    }
   },
   "appearance": {
     "avatarSize": null,
