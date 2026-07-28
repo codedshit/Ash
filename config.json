@@ -115,7 +115,7 @@
     "ringSize": 68,
     "badgeSize": 18,
     "cardOpacity": 0.35,
-    "cardBorderOpacity": 0.3,
+    "cardBorderOpacity": 0,
     "fontDisplay": "Duality",
     "fontQuote": "Matcha Mint",
     "fontEntry": "Nightcore Demo",
