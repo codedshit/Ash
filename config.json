@@ -1,0 +1,68 @@
+{
+  "theme": {
+    "violet": "#5B2A9E",
+    "violetStrong": "#7C4DCE",
+    "rose": "#2E1854",
+    "roseStrong": "#402070"
+  },
+  "backgroundVideo": {
+    "src": "",
+    "opacity": 0.55
+  },
+  "identity": {
+    "name": "Ashy",
+    "taglines": [],
+    "avatar": "https://cdn.discordapp.com/attachments/1531303883035377728/1531303986316050593/ec9ddfc8-e691-40e1-9da9-57a4094e990a.jpg?ex=6a68b978&is=6a6767f8&hm=ce68daa8b72b051d5b4bd359995fbe112652be2d31e3e752780f7a26f22ff951&",
+    "frame": "none"
+  },
+  "songs": [],
+  "badges": [],
+  "discord": {
+    "userId": "",
+    "enabled": false,
+    "showSpotify": true,
+    "showActivity": true
+  },
+  "effects": {
+    "scrollReveal": true,
+    "viewCounter": true
+  },
+  "uploads": {
+    "cloudName": "dgus0vior",
+    "uploadPreset": ""
+  },
+  "bio": {
+    "about": "Tormented.",
+    "rings": [
+      { "emoji": "🧊", "pct": 60, "title": "petrified", "sub": "Dont expect anything from me", "color": "rose" },
+      { "emoji": "💤", "pct": 40, "title": "sleeping", "sub": "sleeping is the key", "color": "violet" }
+    ],
+    "location": "41°36′28.4″N, 71°21′41.2″W",
+    "birthdayMonth": 11,
+    "birthdayDay": 1,
+    "birthdayLabel": "Nov 1",
+    "timezone": "Europe/Helsinki",
+    "lastfmUser": "Ashy-geek"
+  },
+  "socials": [
+    { "icon": "fab fa-discord", "label": "Discord", "url": "https://discord.com/users/codedsum" },
+    { "icon": "fab fa-github", "label": "GitHub", "url": "https://github.com/codedshit" },
+    { "icon": "fas fa-leaf", "label": "AniList", "url": "https://anilist.co/user/Klxxy/" },
+    { "icon": "fab fa-spotify", "label": "Spotify", "url": "https://open.spotify.com/user/31oyzi66p57fkbpncfhkvt2nxi2u" }
+  ],
+  "tabs": {
+    "intel": { "enabled": true, "label": "Intel", "icon": "fas fa-satellite-dish" },
+    "vibe": { "enabled": true, "label": "Vibe", "icon": "fas fa-bolt" },
+    "music": { "enabled": true, "label": "Music", "icon": "fas fa-music" }
+  },
+  "appearance": {
+    "avatarSize": null,
+    "nameSize": null,
+    "taglineSize": null,
+    "ringSize": null,
+    "badgeSize": null,
+    "fontDisplay": null,
+    "fontQuote": null,
+    "entryText": "Click to enter"
+  }
+}
