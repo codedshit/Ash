@@ -31,7 +31,7 @@
     "showActivity": true
   },
   "discordWidgets": {
-    "profileEnabled": false,
+    "profileEnabled": true,
     "serverEnabled": false,
     "serverId": "",
     "inviteUrl": ""
