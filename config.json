@@ -1,0 +1,124 @@
+{
+  "theme": {
+    "violet": "#5B2A9E",
+    "violetStrong": "#7C4DCE",
+    "rose": "#2E1854",
+    "roseStrong": "#402070"
+  },
+  "backgroundVideo": {
+    "src": "https://res.cloudinary.com/dgus0vior/video/upload/v1785247178/aqxcfhdhywredfjffwup.mp4",
+    "opacity": 0.45
+  },
+  "identity": {
+    "name": "Ash",
+    "taglines": [],
+    "avatar": "https://res.cloudinary.com/dgus0vior/image/upload/v1785231863/q2ket61sxg81l3wcoueb.jpg",
+    "frame": "none"
+  },
+  "songs": [],
+  "badges": [
+    {
+      "icon": "💤",
+      "label": "Sleepy",
+      "color": "#FFD700",
+      "glow": true
+    }
+  ],
+  "discord": {
+    "userId": "1301191057656119386",
+    "enabled": true,
+    "showSpotify": true,
+    "showActivity": true
+  },
+  "discordWidgets": {
+    "profileEnabled": false,
+    "serverEnabled": false,
+    "serverId": "",
+    "inviteUrl": ""
+  },
+  "customFonts": [],
+  "customTabs": [],
+  "effects": {
+    "scrollReveal": true,
+    "viewCounter": true
+  },
+  "uploads": {
+    "cloudName": "dgus0vior",
+    "uploadPreset": "Ashy_site"
+  },
+  "bio": {
+    "about": "Tormented.\nSite is controlled on a admin page ;)",
+    "rings": [
+      {
+        "emoji": "💸",
+        "title": "Brokie",
+        "sub": "Spare me some money.. 💔",
+        "pct": 69,
+        "color": "rose"
+      }
+    ],
+    "location": "41°36′28.4″N, 71°21′41.2″W",
+    "birthdayMonth": 11,
+    "birthdayDay": 1,
+    "birthdayLabel": "Nov 1",
+    "timezone": "Europe/Helsinki",
+    "lastfmUser": "Ashy-geek"
+  },
+  "socials": [
+    {
+      "icon": "fab fa-discord",
+      "label": "Discord",
+      "url": "https://discord.com/users/codedsum"
+    },
+    {
+      "icon": "fab fa-github",
+      "label": "GitHub",
+      "url": "https://github.com/codedshit"
+    },
+    {
+      "icon": "fas fa-leaf",
+      "label": "AniList",
+      "url": "https://anilist.co/user/Klxxy/"
+    },
+    {
+      "icon": "fab fa-spotify",
+      "label": "Spotify",
+      "url": "https://open.spotify.com/user/31oyzi66p57fkbpncfhkvt2nxi2u"
+    },
+    {
+      "icon": "fab fa-tiktok",
+      "label": "TikTok",
+      "url": "https://www.tiktok.com/@fw.shahi?_r=1&_t=ZN-98PZmWrKoTO"
+    }
+  ],
+  "tabs": {
+    "intel": {
+      "enabled": true,
+      "label": "Intel",
+      "icon": "fas fa-satellite-dish"
+    },
+    "vibe": {
+      "enabled": true,
+      "label": "Vibe",
+      "icon": "fas fa-bolt"
+    },
+    "music": {
+      "enabled": true,
+      "label": "Music",
+      "icon": "fas fa-music"
+    }
+  },
+  "appearance": {
+    "avatarSize": 194,
+    "nameSize": 41,
+    "taglineSize": 17,
+    "ringSize": 68,
+    "badgeSize": 18,
+    "fontDisplay": "",
+    "fontQuote": "Nightcore Demo",
+    "fontEntry": "",
+    "entryText": "Click to enter",
+    "cardOpacity": 0.66,
+    "cardBorderOpacity": 1
+  }
+}
