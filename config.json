@@ -33,7 +33,15 @@
   },
   "bio": {
     "about": "Tormented.",
-    "rings": [],
+    "rings": [
+      {
+        "emoji": "💸",
+        "title": "Brokie",
+        "sub": "Spare me some money.. 💔",
+        "pct": 69,
+        "color": "rose"
+      }
+    ],
     "location": "41°36′28.4″N, 71°21′41.2″W",
     "birthdayMonth": 11,
     "birthdayDay": 1,
