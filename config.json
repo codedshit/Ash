@@ -69,6 +69,11 @@
       "icon": "fab fa-spotify",
       "label": "Spotify",
       "url": "https://open.spotify.com/user/31oyzi66p57fkbpncfhkvt2nxi2u"
+    },
+    {
+      "icon": "fab fa-tiktok",
+      "label": "TikTok",
+      "url": "https://www.tiktok.com/@fw.shahi?_r=1&_t=ZN-98PZmWrKoTO"
     }
   ],
   "tabs": {
