@@ -109,16 +109,16 @@
     }
   },
   "appearance": {
-    "avatarSize": 194,
+    "avatarSize": 112,
     "nameSize": 41,
     "taglineSize": 17,
     "ringSize": 68,
     "badgeSize": 18,
-    "fontDisplay": "",
-    "fontQuote": "Nightcore Demo",
-    "fontEntry": "",
-    "entryText": "Click to enter",
-    "cardOpacity": 0.66,
-    "cardBorderOpacity": 1
+    "cardOpacity": 0,
+    "cardBorderOpacity": 0,
+    "fontDisplay": "Duality",
+    "fontQuote": "Matcha Mint",
+    "fontEntry": "Nightcore Demo",
+    "entryText": "Click to enter"
   }
 }
