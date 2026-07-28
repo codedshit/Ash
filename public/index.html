@@ -2,2109 +2,1222 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Ash</title>
-<meta name="description" content="Ash's personal corner of the internet.">
-<meta name="theme-color" content="#0A0B12">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9D%84%EF%B8%8F%3C/text%3E%3C/svg%3E">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Site Dashboard</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 <style>
-/* =====================================================================
-   fonts
-   ===================================================================== */
-@font-face{
-    font-family:'Duality';
-    src:url('Duality.otf') format('opentype');
-    font-weight:400 800; font-style:normal; font-display:swap;
-}
-@font-face{
-    font-family:'Nightcore Demo';
-    src:url('NightcoreDemo.ttf') format('truetype');
-    font-weight:400; font-style:normal; font-display:swap;
-}
-@font-face{
-    font-family:'Matcha Mint';
-    src:url('MatchaMint.ttf') format('truetype');
-    font-weight:400; font-style:normal; font-display:swap;
-}
-
-/* =====================================================================
-   0. DESIGN TOKENS — dark, moody, playful accent palette (violet/rose/frost)
-   ===================================================================== */
-:root{
-    --void-dawn-a:#171826;  --void-dawn-b:#1E1B2A;  --void-dawn-c:#0F0F18;
-    --void-day-a:#12141F;   --void-day-b:#0F1119;   --void-day-c:#0A0B12;
-    --void-dusk-a:#181526;  --void-dusk-b:#1C1730;  --void-dusk-c:#0E0C16;
-    --void-night-a:#0A0B14; --void-night-b:#0C0D17; --void-night-c:#05050A;
-
-    --paper:#0A0B12;
-    --paper-strong:#13141F;
-    --ink:#ECEDF6;
-    --ink-soft:rgba(236,237,246,.68);
-    --ink-faint:rgba(236,237,246,.42);
-    --on-accent:#0A0B14;
-
-    --violet:#5B2A9E;
-    --violet-strong:#7C4DCE;
-    --violet-soft:rgba(91,42,158,.20);
-    --rose:#2E1854;
-    --rose-strong:#402070;
-    --rose-soft:rgba(46,24,84,.28);
-    --frost:#8FB2D8;
-    --frost-soft:rgba(143,178,216,.16);
-    --grey:#8B93A7;
-    --grey-soft:rgba(139,147,167,.20);
-
-    --card-alpha:.66;
-    --card-alpha-strong:.88;
-    --card-border-alpha:1;
-    --line:rgba(236,237,246, calc(.09 * var(--card-border-alpha)));
-    --line-strong:rgba(236,237,246, calc(.16 * var(--card-border-alpha)));
-    --glass:rgba(15,16,26, var(--card-alpha));
-    --glass-strong:rgba(19,20,31, var(--card-alpha-strong));
-
-    --shadow-sm:0 8px 24px -12px rgba(0,0,0,.55);
-    --shadow-md:0 20px 48px -20px rgba(0,0,0,.65);
-    --shadow-lg:0 30px 70px -28px rgba(0,0,0,.75);
-
-    --radius-lg:28px;
-    --radius-md:20px;
-    --radius-sm:14px;
-
-    --font-display:'Duality', system-ui, sans-serif;
-    --font-comic:'Nightcore Demo', system-ui, sans-serif;
-    --font-body:'Inter', system-ui, sans-serif;
-    --font-quote:'Matcha Mint', Georgia, serif;
-    --font-mono:'IBM Plex Mono', monospace;
-}
-
-*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
-
-html{ -webkit-text-size-adjust:100%; }
-html,body{
-    min-height:100vh;
-    font-family:var(--font-body);
-    color:var(--ink);
-    background:var(--paper);
-    overflow-x:hidden;
-    scroll-behavior:smooth;
-}
-body{ position:relative; transition:background 1s ease; }
-img{ max-width:100%; display:block; }
-button{ font:inherit; background:none; border:none; color:inherit; }
-a{ color:inherit; text-decoration:none; }
-ul{ list-style:none; }
-
-:focus-visible{ outline:2px solid var(--violet-strong); outline-offset:3px; border-radius:8px; }
-
-::-webkit-scrollbar{ width:8px; }
-::-webkit-scrollbar-track{ background:transparent; }
-::-webkit-scrollbar-thumb{ background:rgba(236,237,246,.18); border-radius:10px; }
-::-webkit-scrollbar-thumb:hover{ background:rgba(236,237,246,.28); }
-
-@media (hover:hover) and (pointer:fine){ html,body{ cursor:none; } }
-
-/* =====================================================================
-   1. AMBIENT SKY — twinkling stars + slow aurora drift + falling snow
-   ===================================================================== */
-/* Background video — sits behind the sky gradient + stars/aurora/snow,
-   which keep layering on top of it. See the BG_VIDEO_SRC config near the
-   top of the <script> at the bottom of this file for how to turn it on. */
-#bg-video{
-    position:fixed; inset:0; z-index:-7; pointer-events:none;
-    width:100%; height:100%; object-fit:cover;
-    display:none;
-}
-body.has-bg-video #sky-bg{ opacity:.5; }
-
-#sky-bg{
-    position:fixed; inset:0; z-index:-6; pointer-events:none;
-    background:linear-gradient(160deg, var(--void-day-a) 0%, var(--void-day-b) 55%, var(--void-day-c) 100%);
-    transition:background 1.4s ease, opacity 1s ease;
-}
-body.sky-dawn  #sky-bg{ background:linear-gradient(160deg, var(--void-dawn-a) 0%, var(--void-dawn-b) 55%, var(--void-dawn-c) 100%); }
-body.sky-day   #sky-bg{ background:linear-gradient(160deg, var(--void-day-a) 0%, var(--void-day-b) 55%, var(--void-day-c) 100%); }
-body.sky-dusk  #sky-bg{ background:linear-gradient(160deg, var(--void-dusk-a) 0%, var(--void-dusk-b) 55%, var(--void-dusk-c) 100%); }
-body.sky-night #sky-bg{ background:linear-gradient(160deg, var(--void-night-a) 0%, var(--void-night-b) 55%, var(--void-night-c) 100%); }
-
-#ambient-canvas{ position:fixed; inset:0; z-index:-5; pointer-events:none; width:100%; height:100%; }
-#motes-canvas{ position:fixed; inset:0; z-index:-4; pointer-events:none; width:100%; height:100%; }
-
-@media (prefers-reduced-motion:reduce){
-    #ambient-canvas,#motes-canvas{ display:none; }
-}
-
-/* =====================================================================
-   2. ENTRY OVERLAY — dimmed & transparent to the main page behind it
-   ===================================================================== */
-#entry-overlay{
-    position:fixed; inset:0; z-index:9999; cursor:pointer; overflow:hidden;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
-    background:rgba(6,7,12,.6);
-    backdrop-filter:blur(9px) saturate(115%);
-    -webkit-backdrop-filter:blur(9px) saturate(115%);
-    transition:opacity .8s ease, visibility .8s ease;
-    padding:24px; text-align:center;
-}
-#entry-overlay.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
-@media (hover:hover) and (pointer:fine){ #entry-overlay{ cursor:none; } }
-
-.entry-content{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
-.entry-comic{
-    font-family:var(--font-comic); font-weight:400; text-transform:none;
-    font-size:clamp(2.2rem,9vw,4.4rem); letter-spacing:2px; line-height:1;
-    color:transparent;
-    -webkit-text-stroke:1.4px rgba(236,237,246,.85);
-    text-stroke:1.4px rgba(236,237,246,.85);
-    filter:drop-shadow(0 0 28px rgba(91,42,158,.35));
-    min-height:1.15em;
-    display:flex; align-items:center; justify-content:center; text-align:center;
-    padding:0 8px;
-    animation:entryPulse 3.2s ease-in-out infinite;
-}
-@keyframes entryPulse{ 0%,100%{ -webkit-text-stroke-color:rgba(236,237,246,.6); } 50%{ -webkit-text-stroke-color:rgba(236,237,246,.95); } }
-@media (prefers-reduced-motion:reduce){ .entry-comic{ animation:none !important; -webkit-text-stroke-color:rgba(236,237,246,.85); } }
-
-/* =====================================================================
-   3. LAYOUT SHELL
-   ===================================================================== */
-#app-shell{
-    position:relative; z-index:1;
-    max-width:460px; margin:0 auto;
-    padding:26px 18px 70px;
-    display:flex; flex-direction:column; align-items:center; gap:22px;
-}
-.layout-grid{ width:100%; display:flex; flex-direction:column; gap:22px; }
-
-@media (min-width:820px){
-    #app-shell{ max-width:1000px; padding:48px 32px 90px; }
-    .layout-grid{
-        display:grid; grid-template-columns:320px 1fr;
-        align-items:start; gap:36px;
+    :root{
+        --bg:#0A0B12; --panel:#12131c; --panel2:#171825; --line:rgba(255,255,255,.1);
+        --violet:#5B2A9E; --violet-strong:#7C4DCE; --ink:#ECEDF6; --ink-soft:#A9ABC0;
     }
-}
-@media (min-width:1180px){
-    #app-shell{ max-width:1160px; }
-    .layout-grid{ grid-template-columns:340px 1fr; gap:46px; }
-}
+    *{ box-sizing:border-box; }
+    body{
+        margin:0; min-height:100vh; background:var(--bg); color:var(--ink);
+        font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+    }
+    .card{
+        width:100%; max-width:460px; margin:60px auto; background:var(--panel); border:1px solid var(--line);
+        border-radius:18px; padding:28px; box-shadow:0 20px 50px -20px rgba(0,0,0,.6);
+    }
+    h1{ font-size:19px; margin:0 0 4px; }
+    h2.group-title{ font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); margin:22px 0 8px; padding-left:4px; }
+    h2.group-title:first-child{ margin-top:0; }
+    p.sub{ color:var(--ink-soft); font-size:13px; margin:0 0 20px; }
+    label{ display:block; font-size:12.5px; color:var(--ink-soft); margin:14px 0 6px; }
+    input[type=text], input[type=password], input[type=number], input[type=url], textarea, select{
+        width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+        background:#0d0e17; color:var(--ink); font-size:14px; font-family:inherit;
+    }
+    input[type=color]{ width:44px; height:34px; border:none; background:none; padding:0; vertical-align:middle; }
+    input[type=range]{ width:100%; accent-color:var(--violet-strong); margin:4px 0; }
+    input[type=file]{ font-size:12.5px; }
+    textarea{ resize:vertical; min-height:80px; }
+    .row{ display:flex; gap:10px; align-items:center; }
+    .row > div{ flex:1; }
+    button{
+        margin-top:16px; width:100%; padding:11px; border-radius:10px; border:none; cursor:pointer;
+        background:linear-gradient(120deg,var(--violet),var(--violet-strong)); color:#fff;
+        font-weight:600; font-size:14px;
+    }
+    button.secondary{ background:rgba(255,255,255,.06); color:var(--ink); }
+    button.small{ margin:0; width:auto; padding:6px 10px; font-size:12px; }
+    button:disabled{ opacity:.5; cursor:default; }
 
-/* =====================================================================
-   4. GLASS SURFACE
-   ===================================================================== */
-.glass{
-    background:var(--glass);
-    backdrop-filter:blur(22px) saturate(140%);
-    -webkit-backdrop-filter:blur(22px) saturate(140%);
-    border:1px solid var(--line-strong);
-    border-radius:var(--radius-lg);
-    box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,.04);
-    position:relative; overflow:hidden;
-}
-.glass::before{
-    content:''; position:absolute; inset:0; pointer-events:none;
-    background:radial-gradient(ellipse at top left, rgba(91,42,158,.08) 0%, transparent 55%);
-}
+    /* ---- dashboard shell: sidebar + content ---- */
+    #dashCard{ display:none; }
+    .dash-shell{ display:flex; min-height:100vh; }
+    .dash-sidebar{
+        width:220px; flex-shrink:0; background:var(--panel); border-right:1px solid var(--line);
+        padding:20px 12px; position:sticky; top:0; height:100vh; overflow-y:auto;
+    }
+    .dash-sidebar h1{ padding:0 8px; }
+    .dash-sidebar p.sub{ padding:0 8px; margin-bottom:16px; }
+    .nav-group-title{ font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-soft); padding:14px 8px 6px; }
+    .nav-group-title:first-of-type{ padding-top:4px; }
+    .nav-btn{
+        display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+        margin:2px 0; padding:9px 10px; border-radius:10px; background:transparent; color:var(--ink-soft);
+        font-size:13px; font-weight:500;
+    }
+    .nav-btn:hover{ background:rgba(255,255,255,.05); color:var(--ink); }
+    .nav-btn.active{ background:linear-gradient(120deg,var(--violet),var(--violet-strong)); color:#fff; }
+    .nav-btn i{ width:16px; text-align:center; }
+    .dash-content{ flex:1; min-width:0; padding:32px; max-width:760px; }
+    .dash-content h2.panel-h{ font-size:20px; margin:0 0 4px; }
 
-/* =====================================================================
-   5. PROFILE CARD
-   ===================================================================== */
-.profile-card{
-    width:100%; padding:30px 26px 26px;
-    display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px;
-}
-@media (min-width:820px){ .profile-card{ position:sticky; top:36px; } }
+    .section{ display:none; }
+    .section.active{ display:block; }
+    .msg{ font-size:13px; margin-top:10px; min-height:18px; }
+    .msg.ok{ color:#8fd8a0; }
+    .msg.err{ color:#e0748c; }
+    .item-row{
+        display:flex; justify-content:space-between; align-items:center; gap:10px;
+        padding:10px 12px; border:1px solid var(--line); border-radius:10px; margin-top:8px; font-size:13px;
+        background:var(--panel2);
+    }
+    .item-row > span:first-child{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .item-row .actions{ display:flex; gap:6px; flex-shrink:0; }
+    .item-row button{ margin:0; width:auto; padding:6px 10px; font-size:12px; }
+    .item-row button.danger{ background:rgba(224,116,140,.15); color:#e0748c; }
+    #logoutBtn{ background:rgba(255,255,255,.06); color:var(--ink-soft); margin-top:8px; }
+    hr{ border:none; border-top:1px solid var(--line); margin:20px 0; }
+    .field-card{ border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-top:10px; background:var(--panel2); }
+    .progress-track{ width:100%; height:6px; border-radius:3px; background:rgba(255,255,255,.08); margin-top:8px; overflow:hidden; display:none; }
+    .progress-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--violet),var(--violet-strong)); transition:width .15s ease; }
 
-.profile-meta{
-    font-family:var(--font-mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
-    color:var(--ink-faint);
-}
-
-.greeting-eyebrow{
-    font-family:var(--font-mono); font-size:11px; letter-spacing:3px; text-transform:uppercase;
-    color:var(--violet-strong); display:flex; align-items:center; gap:6px;
-}
-
-/* avatar — */
-.avatar-wrap{ position:relative; width:var(--avatar-size,112px); height:var(--avatar-size,112px); margin:4px 0 2px; }
-.avatar-ring{
-    position:absolute; inset:0; border-radius:50%; padding:4px;
-    background:transparent;
-    box-shadow:0 14px 34px -10px rgba(91,42,158,.4);
-}
-.avatar-ring-inner{ width:100%; height:100%; border-radius:50%; overflow:hidden; background:var(--paper); }
-.profile-pic{ width:100%; height:100%; border-radius:50%; object-fit:cover; }
-.avatar-fallback{
-    width:100%; height:100%; display:none; align-items:center; justify-content:center;
-    font-family:var(--font-display); font-weight:800; font-size:38px; color:var(--ink);
-    background:linear-gradient(135deg,var(--violet-soft),var(--rose-soft));
-}
-/* Discord profile frame slot  */
-.avatar-frame{ position:absolute; inset:-14%; pointer-events:none; z-index:2; }
-.avatar-frame img{ width:100%; height:100%; object-fit:contain; }
-.avatar-frame.frame-gold::before,
-.avatar-frame.frame-holo::before{
-    content:''; position:absolute; inset:0; border-radius:50%; padding:5px;
-    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor; mask-composite:exclude;
-}
-.avatar-frame.frame-gold::before{
-    background:conic-gradient(from var(--frame-angle,0deg), #FFD700, #fff6c8, #FFD700, #b8860b, #FFD700);
-    animation:frameSpin 4s linear infinite;
-}
-.avatar-frame.frame-holo::before{
-    background:conic-gradient(from var(--frame-angle,0deg), var(--violet), var(--frost), var(--rose), var(--violet-strong), var(--violet));
-    animation:frameSpin 5s linear infinite;
-}
-@keyframes frameSpin{ to{ --frame-angle:360deg; } }
-@property --frame-angle{ syntax:'<angle>'; initial-value:0deg; inherits:false; }
-
-/* Badges row — icon-only chips; label shows in a tooltip on hover (desktop)
-   or tap (touch/mobile, toggled via JS by adding/removing .show-tip). */
-.badges-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
-.badge-chip{
-    position:relative; display:inline-flex; align-items:center; justify-content:center;
-    width:calc(var(--badge-size,11px) * 2.6); height:calc(var(--badge-size,11px) * 2.6);
-    min-width:30px; min-height:30px;
-    border-radius:50%; font-family:var(--font-mono); font-size:var(--badge-size,11px); font-weight:600;
-    letter-spacing:.3px; border:1px solid var(--line-strong); background:var(--glass-strong);
-    box-shadow:0 4px 14px -6px rgba(0,0,0,.5); cursor:pointer;
-    transition:transform .25s cubic-bezier(.2,.9,.3,1.3);
-}
-.badge-chip:hover{ transform:translateY(-3px) scale(1.08); }
-.badge-chip.glow{ animation:badgeGlow 2s ease-in-out infinite; }
-@keyframes badgeGlow{
-    0%,100%{ box-shadow:0 4px 14px -6px rgba(0,0,0,.5), 0 0 6px 0 var(--glow-color,#FFD700); }
-    50%{ box-shadow:0 4px 14px -6px rgba(0,0,0,.5), 0 0 16px 3px var(--glow-color,#FFD700); }
-}
-.badge-icon-img{ width:16px; height:16px; object-fit:contain; border-radius:3px; }
-.badge-tip{
-    position:absolute; bottom:calc(100% + 9px); left:50%; transform:translateX(-50%) translateY(4px);
-    background:var(--glass-strong); border:1px solid var(--line-strong); border-radius:8px;
-    padding:5px 10px; font-size:11px; font-family:var(--font-mono); white-space:nowrap; color:var(--ink);
-    opacity:0; visibility:hidden; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
-    box-shadow:var(--shadow-sm); z-index:5;
-}
-.badge-chip:hover .badge-tip,
-.badge-chip.show-tip .badge-tip{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); }
-
-/* Discord status colors */
-.status-dot.status-online{ background:#3BA55D; box-shadow:0 0 8px rgba(59,165,93,.7); }
-.status-dot.status-idle{ background:#FAA61A; box-shadow:0 0 8px rgba(250,166,26,.7); }
-.status-dot.status-dnd{ background:#ED4245; box-shadow:0 0 8px rgba(237,66,69,.7); }
-.status-dot.status-offline{ background:var(--grey); box-shadow:0 0 8px rgba(139,147,167,.6); }
-
-/* Scroll reveal */
-.reveal-init{ opacity:0; transform:translateY(28px); }
-.reveal-in{ opacity:1; transform:translateY(0); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1); }
-
-.header-name{
-    font-family:var(--font-display); font-weight:800; font-size:var(--name-size, clamp(1.9rem,5vw,2.5rem));
-    color:var(--ink); position:relative; background:linear-gradient(100deg, var(--ink) 40%, var(--violet-strong) 50%, var(--ink) 60%);
-    background-size:300% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-    transition:background-position 1.1s ease; background-position:0% 0%;
-}
-.header-name:hover{ background-position:100% 0%; }
-
-.status-line{ display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-soft); font-family:var(--font-mono); flex-wrap:wrap; justify-content:center; }
-.status-dot{ width:7px; height:7px; border-radius:50%; background:var(--grey); box-shadow:0 0 8px rgba(139,147,167,.6); animation:pulse 1.8s ease-in-out infinite; }
-@keyframes pulse{ 0%,100%{ transform:scale(1); opacity:.6; } 50%{ transform:scale(1.4); opacity:1; } }
-
-.tagline{ font-family:var(--font-quote); font-style:italic; font-size:var(--tagline-size,17px); color:var(--ink-soft); max-width:300px; min-height:52px; line-height:1.5; }
-.tagline-cursor{ display:inline-block; margin-left:2px; color:var(--violet-strong); animation:caretBlink 1s step-end infinite; }
-@keyframes caretBlink{ 50%{ opacity:0; } }
-@media (prefers-reduced-motion:reduce){ .tagline-cursor{ animation:none; } }
-
-.social-row{ display:flex; gap:10px; margin-top:4px; flex-wrap:wrap; justify-content:center; }
-.social-btn{
-    width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-    background:var(--paper-strong); border:1px solid var(--line); color:var(--ink-soft); font-size:16px;
-    box-shadow:var(--shadow-sm); transition:transform .3s cubic-bezier(.2,.9,.3,1.3), color .3s, border-color .3s;
-    cursor:pointer;
-}
-.social-btn:hover{ transform:translateY(-4px) scale(1.06); color:var(--violet-strong); border-color:var(--violet-soft); }
-.social-btn.spotify:hover{ color:#3FD07A; border-color:rgba(63,208,122,.35); }
-
-/* Discord add-on widgets — richer profile card + server presence card */
-.discord-widgets-row{ display:flex; flex-direction:column; gap:10px; width:100%; }
-.discord-profile-widget{
-    display:flex; align-items:center; gap:12px; padding:10px 12px; width:100%;
-    background:var(--glass); border:1px solid var(--line-strong); border-radius:14px;
-}
-.dpw-avatar{ width:40px; height:40px; border-radius:50%; object-fit:cover; background:var(--paper-strong); flex-shrink:0; }
-.dpw-info{ min-width:0; text-align:left; }
-.dpw-name{ font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.dpw-status{ display:flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.discord-server-widget{
-    padding:10px 12px; width:100%;
-    background:var(--glass); border:1px solid var(--line-strong); border-radius:14px;
-}
-.dsw-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
-.dsw-name{ font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink); text-decoration:none; }
-.dsw-name:hover{ color:var(--violet-strong); }
-.dsw-count{ display:flex; align-items:center; gap:5px; font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); }
-.dsw-members{ display:flex; gap:4px; margin-top:8px; }
-.dsw-member-avatar{ width:22px; height:22px; border-radius:50%; object-fit:cover; border:2px solid var(--paper); margin-left:-6px; }
-.dsw-members .dsw-member-avatar:first-child{ margin-left:0; }
-.dsw-loading{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); }
-
-/* learning addict — comic sticker badge */
-.badge-feature{
-    display:inline-flex; align-items:center; gap:10px; padding:10px 16px; border-radius:16px;
-    background:linear-gradient(120deg, var(--violet-soft), var(--rose-soft));
-    border:1px solid var(--line-strong);
-    transform:rotate(-2deg);
-    transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-    margin-top:4px;
-}
-.badge-feature:hover{ transform:rotate(0deg) scale(1.05); }
-.badge-feature-icon{ font-size:20px; }
-.badge-feature-text{ display:flex; flex-direction:column; align-items:flex-start; }
-.badge-feature-title{ font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink); }
-.badge-feature-sub{ font-family:var(--font-mono); font-size:9.5px; color:var(--ink-faint); letter-spacing:.4px; }
-
-.local-time-chip{
-    font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); letter-spacing:.4px;
-    border-top:1px solid var(--line); padding-top:12px; margin-top:6px; width:100%;
-    display:flex; flex-direction:column; gap:7px;
-}
-.ltc-row{ display:flex; align-items:center; justify-content:center; gap:6px; }
-.ltc-row i{ color:var(--violet-strong); font-size:10px; }
-
-/* =====================================================================
-   6. TAB RAIL (left / curled) + PANELS (right, slide in)
-   ===================================================================== */
-.content-col{ width:100%; display:flex; flex-direction:column; gap:18px; }
-
-.tab-shell{ display:flex; flex-direction:column; gap:16px; width:100%; }
-
-.tab-rail{
-    display:flex; flex-direction:row; gap:6px; padding:6px; border-radius:18px;
-    background:var(--glass); backdrop-filter:blur(22px) saturate(140%); -webkit-backdrop-filter:blur(22px) saturate(140%);
-    border:1px solid var(--line-strong);
-    box-shadow:var(--shadow-md), 0 0 30px -6px rgba(91,42,158,.35), 0 0 46px -14px rgba(46,24,84,.3);
-    overflow-x:auto; scrollbar-width:none;
-}
-.tab-rail::-webkit-scrollbar{ display:none; }
-
-.tab-btn{
-    flex:1; padding:11px 12px; border-radius:14px; cursor:pointer; white-space:nowrap;
-    font-family:var(--font-display); font-weight:600; font-size:12.5px; letter-spacing:.4px;
-    color:var(--ink-faint); display:flex; align-items:center; justify-content:center; gap:7px;
-    transition:transform .3s cubic-bezier(.34,1.56,.64,1), color .25s ease, background .25s ease, box-shadow .25s ease;
-}
-.tab-btn:hover{ color:var(--ink); transform:translateY(-2px); }
-.tab-btn.active{
-    color:var(--on-accent);
-    background:linear-gradient(120deg, var(--violet), var(--rose));
-    box-shadow:0 6px 18px -6px rgba(91,42,158,.6), 0 0 22px -4px rgba(46,24,84,.55);
-    transform:translateY(-2px);
-}
-@media (max-width:819px){
-    .tab-btn:active{ transform:scale(.96) translateY(-1px); }
-}
-
-.tab-panels{ flex:1; min-width:0; display:flex; flex-direction:column; }
-.tab-panel{ display:none; flex-direction:column; gap:18px; }
-.tab-panel.active{ display:flex; animation:panelInRight .5s cubic-bezier(.34,1.56,.64,1); }
-@keyframes panelInRight{ from{ opacity:0; transform:translateX(26px); } to{ opacity:1; transform:translateX(0); } }
-@media (max-width:819px){
-    @keyframes panelInRight{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
-}
-
-.panel-card{ padding:26px 24px; }
-.panel-eyebrow{
-    font-family:var(--font-mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--violet-strong);
-    display:flex; align-items:center; gap:8px; margin-bottom:6px;
-}
-.panel-title{ font-family:var(--font-display); font-weight:800; font-size:clamp(1.3rem,3vw,1.6rem); color:var(--ink); margin-bottom:14px; }
-.about-text{ font-size:14.5px; line-height:1.75; color:var(--ink-soft); margin-bottom:22px; font-family:var(--font-display); font-weight:600; letter-spacing:.3px; }
-
-/* =====================================================================
-   7. STAT RINGS — just two, side by side
-   ===================================================================== */
-.ring-grid{ display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:26px; }
-@media (min-width:480px){ .ring-grid{ grid-template-columns:1fr 1fr; } }
-.ring-tile{
-    display:flex; align-items:center; gap:14px; padding:16px;
-    background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:18px;
-    transition:transform .25s ease, border-color .25s ease;
-}
-.ring-tile:hover{ transform:translateY(-2px); }
-
-.ring-svg-wrap{ position:relative; width:var(--ring-size,82px); height:var(--ring-size,82px); flex-shrink:0; }
-.ring-svg{ width:100%; height:100%; transform:rotate(-90deg); }
-.ring-track{ fill:none; stroke:rgba(237,230,214,.09); stroke-width:8; }
-.ring-fill{ fill:none; stroke-width:8; stroke-linecap:round; }
-.ring-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; }
-.ring-emoji{ font-size:19px; }
-.ring-pct{ font-family:var(--font-mono); font-size:10px; color:var(--ink-soft); margin-top:1px; }
-
-.ring-hero-text{ display:flex; flex-direction:column; gap:2px; min-width:0; }
-.ring-hero-title{ font-family:var(--font-display); font-weight:700; font-size:15.5px; color:var(--ink); }
-.ring-hero-sub{ font-family:var(--font-mono); font-size:10.5px; color:var(--ink-faint); line-height:1.4; }
-
-/* =====================================================================
-   8. INFO BLOCKS / TAGS / BIRTHDAY
-   ===================================================================== */
-.info-block{ margin-bottom:22px; }
-.info-block:last-of-type{ margin-bottom:0; }
-.info-block-title{
-    display:flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:700;
-    font-size:13.5px; color:var(--ink); margin-bottom:10px;
-}
-.info-block-title i{ color:var(--violet-strong); font-size:12px; }
-.tag-row{ display:flex; flex-wrap:wrap; gap:8px; }
-.tag-chip{
-    font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft);
-    background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:12px; padding:6px 11px;
-    transition:transform .25s ease, border-color .25s ease, color .25s ease;
-}
-.tag-chip:hover{ transform:translateY(-2px); border-color:var(--violet-soft); color:var(--violet-strong); }
-.tag-chip.copyable{ cursor:pointer; }
-.tag-chip-featured{ font-weight:700; color:var(--ink); border-color:var(--violet-soft); background:linear-gradient(120deg, var(--violet-soft), transparent 80%); }
-
-.bday-row{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
-.bday-ring-wrap{ position:relative; width:82px; height:82px; flex-shrink:0; }
-.bday-facts{ display:flex; flex-direction:column; gap:5px; }
-.bday-days{ font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--ink); }
-.bday-sub{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); }
-.bday-zodiac{ font-family:var(--font-mono); font-size:10.5px; color:var(--violet-strong); }
-
-/* =====================================================================
-   9. VIBE PANEL
-   ===================================================================== */
-.vibe-header{ display:flex; align-items:center; gap:8px; margin-bottom:18px; }
-.vibe-live-dot{ width:6px; height:6px; border-radius:50%; background:var(--rose); box-shadow:0 0 8px rgba(46,24,84,.7); animation:pulse 1.6s ease-in-out infinite; margin-left:auto; }
-
-.vsn-grid{ display:flex; align-items:center; gap:18px; margin-bottom:16px; }
-.vsn-orb{
-    width:74px; height:74px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
-    background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.05), var(--violet-soft) 75%); border:1px solid var(--line);
-    font-size:32px; box-shadow:var(--shadow-sm);
-}
-.vsn-mood-tag{ text-align:center; font-family:var(--font-mono); font-size:10.5px; color:var(--ink-faint); margin-top:6px; text-transform:uppercase; letter-spacing:1px; }
-.vsn-info-col{ flex:1; min-width:0; }
-.vsn-caption{ font-family:var(--font-quote); font-style:italic; font-size:16px; color:var(--ink); margin-bottom:10px; }
-.vsn-fixation-row{ display:flex; justify-content:space-between; gap:10px; font-size:12.5px; padding:4px 0; }
-.vsn-fixation-label{ color:var(--ink-faint); font-family:var(--font-mono); font-size:10.5px; letter-spacing:.3px; }
-.vsn-fixation-val{ color:var(--ink-soft); font-weight:600; text-align:right; }
-.vsn-tags-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
-
-.vibe-divider{ height:1px; background:var(--line); margin:18px 0; }
-.live-stat-row{ display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-.live-stat{ display:flex; flex-direction:column; gap:4px; }
-.live-stat-label{ font-family:var(--font-mono); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-faint); }
-.live-stat-val{ font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--ink); }
-.now-playing-line{ margin-top:16px; padding:12px 14px; border-radius:12px; background:rgba(255,255,255,.02); border:1px solid var(--line); font-size:12.5px; color:var(--ink-soft); display:flex; align-items:center; gap:8px; }
-.now-playing-line i{ color:var(--violet-strong); }
-
-/* =====================================================================
-   10. MUSIC PANEL
-   ===================================================================== */
-.lfm-hero{ display:flex; align-items:center; gap:16px; margin-bottom:22px; }
-.lfm-art-wrap{ position:relative; width:72px; height:72px; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-sm); flex-shrink:0; }
-.lfm-art{ width:100%; height:100%; object-fit:cover; transition:transform 8s linear; }
-.lfm-art.spinning{ animation:artSpin 8s linear infinite; }
-@keyframes artSpin{ to{ transform:rotate(360deg); } }
-.lfm-text{ flex:1; min-width:0; }
-.lfm-track-row{ display:flex; align-items:center; gap:8px; }
-.lfm-track{ font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.lfm-artist{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.lfm-status{ font-family:var(--font-mono); font-size:10.5px; color:var(--ink-faint); margin-top:4px; letter-spacing:.4px; }
-.eq-bars{ display:flex; align-items:flex-end; gap:2.5px; height:13px; opacity:0; transition:opacity .3s; }
-.eq-bars.active{ opacity:1; }
-.eq-bar{ width:3px; background:linear-gradient(var(--violet),var(--rose)); border-radius:2px; animation:eqBounce 1s ease-in-out infinite; }
-.eq-bar:nth-child(1){ animation-delay:0s; } .eq-bar:nth-child(2){ animation-delay:.15s; }
-.eq-bar:nth-child(3){ animation-delay:.3s; } .eq-bar:nth-child(4){ animation-delay:.45s; }
-@keyframes eqBounce{ 0%,100%{ height:4px; } 50%{ height:13px; } }
-
-.section-label{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--ink-faint); margin-bottom:10px; }
-.recent-row{ display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--line); }
-.recent-row:last-child{ border-bottom:none; }
-.recent-art{ width:38px; height:38px; border-radius:9px; object-fit:cover; flex-shrink:0; background:var(--frost-soft); }
-.recent-text{ flex:1; min-width:0; }
-.recent-track{ font-size:13px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.recent-artist{ font-size:11.5px; color:var(--ink-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.recent-time{ font-family:var(--font-mono); font-size:10px; color:var(--ink-faint); flex-shrink:0; }
-
-.top-artists-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
-.artist-chip{ display:flex; align-items:center; gap:6px; font-size:11.5px; padding:6px 12px; border-radius:999px; background:rgba(255,255,255,.02); border:1px solid var(--line); color:var(--ink-soft); }
-.artist-chip .rank{ font-family:var(--font-mono); color:var(--violet-strong); font-weight:700; }
-
-/* =====================================================================
-   11. MP3 PLAYER — upgraded
-   ===================================================================== */
-.player-card{ margin-top:26px; padding-top:22px; border-top:1px solid var(--line); }
-.player{ display:flex; flex-direction:column; gap:14px; }
-.player-top{ display:flex; align-items:center; gap:14px; }
-.player-cover-wrap{ position:relative; width:60px; height:60px; border-radius:14px; overflow:hidden; flex-shrink:0; box-shadow:var(--shadow-sm); background:linear-gradient(135deg,var(--violet-soft),var(--rose-soft)); }
-.player-cover{ width:100%; height:100%; object-fit:cover; }
-.player-cover-fallback{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:20px; color:var(--violet-strong); }
-.player-cover-wrap.is-playing{ box-shadow:0 0 0 3px rgba(91,42,158,.35), var(--shadow-sm); }
-.player-info{ flex:1; min-width:0; }
-.player-title{ font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.player-artist{ font-size:11.5px; color:var(--ink-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.player-index{ font-family:var(--font-mono); font-size:10px; color:var(--ink-faint); margin-top:2px; }
-
-.progress-wrap{ position:relative; height:5px; border-radius:4px; background:var(--line); cursor:pointer; }
-.progress-fill{ position:absolute; top:0; left:0; height:100%; border-radius:4px; background:linear-gradient(90deg,var(--violet),var(--rose)); width:0%; }
-.player-times{ display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--ink-faint); margin-top:-6px; }
-
-.player-controls{ display:flex; align-items:center; justify-content:center; gap:12px; }
-.pctrl{ width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--ink-soft); background:rgba(255,255,255,.03); border:1px solid var(--line); cursor:pointer; transition:transform .25s ease, color .25s, border-color .25s; font-size:12.5px; }
-.pctrl:hover{ color:var(--violet-strong); transform:translateY(-2px); }
-.pctrl.play-btn{ width:46px; height:46px; font-size:15px; color:var(--on-accent); background:linear-gradient(120deg,var(--violet),var(--rose)); border:none; box-shadow:0 10px 22px -8px rgba(91,42,158,.45); }
-.pctrl.active-toggle{ color:var(--violet-strong); border-color:var(--violet-soft); background:var(--violet-soft); }
-.pctrl.speed-btn{ width:auto; padding:0 10px; font-family:var(--font-mono); font-size:11px; }
-.pctrl.liked{ color:var(--rose-strong); border-color:var(--rose-soft); background:var(--rose-soft); }
-
-.player-extra{ display:flex; align-items:center; justify-content:center; gap:10px; }
-
-.player-vol{ display:flex; align-items:center; gap:8px; color:var(--ink-faint); font-size:12px; }
-.player-vol input[type=range]{ flex:1; -webkit-appearance:none; appearance:none; height:4px; border-radius:4px; background:var(--line); }
-.player-vol input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:13px; height:13px; border-radius:50%; background:var(--violet-strong); cursor:pointer; }
-.player-vol input[type=range]::-moz-range-thumb{ width:13px; height:13px; border-radius:50%; background:var(--violet-strong); border:none; cursor:pointer; }
-
-.player-empty{ text-align:center; padding:26px 10px; color:var(--ink-faint); font-size:12.5px; line-height:1.7; }
-.player-empty i{ font-size:22px; color:var(--violet-soft); margin-bottom:10px; display:block; }
-.player-empty code{ background:rgba(255,255,255,.06); padding:2px 6px; border-radius:6px; font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); }
-
-.playlist-queue{ margin-top:16px; display:flex; flex-direction:column; gap:2px; }
-.pq-row{
-    display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:12px; cursor:pointer;
-    border:1px solid transparent; transition:background .2s ease, border-color .2s ease;
-}
-.pq-row:hover{ background:rgba(255,255,255,.03); }
-.pq-row.active{ background:var(--violet-soft); border-color:var(--violet-soft); }
-.pq-index{ font-family:var(--font-mono); font-size:10.5px; color:var(--ink-faint); width:16px; flex-shrink:0; }
-.pq-row.active .pq-index{ color:var(--violet-strong); }
-.pq-text{ flex:1; min-width:0; }
-.pq-title{ font-size:12.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.pq-artist{ font-size:11px; color:var(--ink-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.pq-playing-icon{ color:var(--violet-strong); font-size:11px; }
-
-/* toast */
-#toast{
-    position:fixed; bottom:26px; left:50%; transform:translate(-50%,20px); z-index:1200;
-    background:var(--paper-strong); color:var(--ink); font-size:12.5px; font-family:var(--font-mono);
-    padding:11px 18px; border-radius:999px; opacity:0; pointer-events:none; transition:all .35s cubic-bezier(.2,.9,.3,1.2);
-    box-shadow:var(--shadow-md); border:1px solid var(--line-strong);
-}
-#toast.show{ opacity:1; transform:translate(-50%,0); }
-
-/* =====================================================================
-   12. KONAMI SECRET
-   ===================================================================== */
-#konami-flash{
-    position:fixed; inset:0; z-index:9998; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
-    background:rgba(6,7,12,.92); backdrop-filter:blur(14px); opacity:0; pointer-events:none; transition:opacity .3s ease; text-align:center; padding:0 24px;
-}
-#konami-flash.active{ opacity:1; pointer-events:all; }
-.kf-text{ font-family:var(--font-display); font-weight:800; font-size:24px; background:linear-gradient(120deg,var(--violet),var(--rose)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-.kf-fact{ font-family:var(--font-quote); font-style:italic; font-size:16px; color:var(--ink-soft); max-width:340px; }
-.kf-hint{ font-family:var(--font-mono); font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--ink-faint); }
-
-/* =====================================================================
-   13. CURSOR + RIPPLE
-   ===================================================================== */
-#cursor-dot{
-    position:fixed; top:0; left:0; width:6px; height:6px; border-radius:50%;
-    background:var(--violet-strong); transform:translate(-50%,-50%);
-    pointer-events:none; z-index:99999; transition:background .25s ease, width .2s ease, height .2s ease;
-    display:none;
-}
-#cursor-ring{
-    position:fixed; top:0; left:0; width:32px; height:32px; border-radius:50%;
-    border:1.5px solid rgba(91,42,158,.55);
-    transform:translate(-50%,-50%);
-    pointer-events:none; z-index:99998; opacity:.9;
-    transition:width .28s cubic-bezier(.2,.9,.3,1.2), height .28s cubic-bezier(.2,.9,.3,1.2), border-color .25s ease, background .25s ease;
-    display:none;
-}
-@media (hover:hover) and (pointer:fine){ #cursor-dot,#cursor-ring{ display:block; } }
-#cursor-dot.hovering{ background:var(--rose); width:9px; height:9px; }
-#cursor-ring.hovering{ width:50px; height:50px; border-color:var(--rose); background:rgba(46,24,84,.06); }
-#cursor-dot.clicked{ width:4px; height:4px; }
-#cursor-ring.clicked{ width:22px; height:22px; }
-
-.ripple-burst{
-    position:fixed; pointer-events:none; z-index:99997; border-radius:50%; transform:translate(-50%,-50%);
-    border:2px solid rgba(91,42,158,.55); width:0; height:0; animation:ripplePop .55s cubic-bezier(.2,.8,.4,1) forwards;
-}
-.ripple-burst.alt{ border-color:rgba(46,24,84,.55); }
-@keyframes ripplePop{ 0%{ width:0; height:0; opacity:1; } 100%{ width:80px; height:80px; opacity:0; } }
-
-/* =====================================================================
-   14. FOOTER
-   ===================================================================== */
-.site-footer{
-    position:relative; z-index:1; text-align:center; font-family:var(--font-mono); font-size:11px;
-    color:var(--ink-faint); padding:30px 0 46px; letter-spacing:.5px;
-}
-
-/* =====================================================================
-   15. RESPONSIVE FINE-TUNING
-   ===================================================================== */
-@media (max-width:400px){
-    /* Previously this hardcoded 96px here, which silently overrode
-       whatever avatar size was configured in the admin panel — that's
-       why changing "avatar size" only ever visibly worked on desktop.
-       Now mobile honors the same --avatar-size variable as desktop. */
-    .avatar-fallback{ font-size:34px; }
-}
+    @media (max-width:860px){
+        .dash-shell{ flex-direction:column; }
+        .dash-sidebar{
+            width:100%; height:auto; position:static; display:flex; overflow-x:auto; gap:4px;
+            padding:14px 12px; align-items:center; white-space:nowrap;
+        }
+        .dash-sidebar h1, .dash-sidebar p.sub, .nav-group-title{ display:none; }
+        .nav-btn{ width:auto; margin:0; flex-shrink:0; }
+        .dash-content{ padding:20px; }
+    }
 </style>
 </head>
-<body class="sky-day">
+<body>
 
-<video id="bg-video" autoplay muted loop playsinline></video>
-<div id="sky-bg"></div>
-<canvas id="ambient-canvas"></canvas>
-<canvas id="motes-canvas"></canvas>
-<div id="cursor-ring"></div>
-<div id="cursor-dot"></div>
-
-<div id="entry-overlay" onclick="enterSite()">
-    <div class="entry-content">
-        <div class="entry-comic"><span id="entryComicText"></span></div>
-    </div>
+<div class="card" id="loginCard">
+    <h1>Site Dashboard</h1>
+    <p class="sub">Enter your password to continue.</p>
+    <label>Password</label>
+    <input type="password" id="password" placeholder="••••••••">
+    <button id="loginBtn">Log in</button>
+    <div class="msg" id="loginMsg"></div>
 </div>
 
-<div id="konami-flash" onclick="closeKonami()">
-    <div class="kf-text">✦ secret found ✦</div>
-    <p class="kf-fact" id="kfFact"></p>
-    <div class="kf-hint">tap anywhere to close</div>
-</div>
+<div id="dashCard">
+<div class="dash-shell">
+    <nav class="dash-sidebar">
+        <h1>Site Dashboard</h1>
+        <p class="sub">Changes go live in a minute or two after saving.</p>
 
-<div id="toast"></div>
+        <div class="nav-group-title">Design</div>
+        <button class="nav-btn active" data-tab="theme"><i class="fas fa-palette"></i>Theme</button>
+        <button class="nav-btn" data-tab="video"><i class="fas fa-video"></i>BG Video</button>
+        <button class="nav-btn" data-tab="appearance"><i class="fas fa-ruler-combined"></i>Appearance</button>
+        <button class="nav-btn" data-tab="fonts"><i class="fas fa-font"></i>Fonts</button>
 
-<main id="app-shell">
-    <div class="layout-grid">
+        <div class="nav-group-title">Content</div>
+        <button class="nav-btn" data-tab="identity"><i class="fas fa-id-badge"></i>Identity</button>
+        <button class="nav-btn" data-tab="bio"><i class="fas fa-user"></i>Bio</button>
+        <button class="nav-btn" data-tab="socials"><i class="fas fa-share-nodes"></i>Socials</button>
+        <button class="nav-btn" data-tab="songs"><i class="fas fa-music"></i>Songs</button>
+        <button class="nav-btn" data-tab="badges"><i class="fas fa-award"></i>Badges</button>
 
-        <!-- ===================== PROFILE CARD ===================== -->
-        <aside class="profile-card glass">
-            <div class="profile-meta">He/Him</div>
-            <div class="greeting-eyebrow"><i class="fas fa-moon"></i><span id="greetingText">good day</span></div>
+        <div class="nav-group-title">Layout</div>
+        <button class="nav-btn" data-tab="pagetabs"><i class="fas fa-table-columns"></i>Built-in Tabs</button>
+        <button class="nav-btn" data-tab="customtabs"><i class="fas fa-layer-group"></i>Custom Tabs &amp; Widgets</button>
 
-            <div class="avatar-wrap">
-                <div class="avatar-ring">
-                    <div class="avatar-ring-inner">
-                        <img src="63d5e817c7e2c9ac82af4eb7221d95c6.jpg" alt="Profile Picture" class="profile-pic" id="profilePic" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <span class="avatar-fallback">A</span>
-                    </div>
-                </div>
-                <div class="avatar-frame" id="avatarFrame"></div>
+        <div class="nav-group-title">Integrations</div>
+        <button class="nav-btn" data-tab="discord"><i class="fab fa-discord"></i>Discord</button>
+        <button class="nav-btn" data-tab="uploads"><i class="fas fa-cloud-arrow-up"></i>Uploads</button>
+        <button class="nav-btn" data-tab="extras"><i class="fas fa-sliders"></i>Effects</button>
+
+        <button id="logoutBtn" onclick="logout()">Log out</button>
+    </nav>
+
+    <div class="dash-content">
+
+
+    <!-- THEME -->
+    <div class="section active" id="tab-theme">
+        <div class="row">
+            <div><label>Main accent (violet)</label>
+                <div class="row"><input type="color" id="violet"><input type="text" id="violetHex"></div>
             </div>
-
-            <h1 class="header-name" data-text="Ash" id="headerName">Ash</h1>
-            <div class="badges-row" id="badgesRow"></div>
-            <div class="status-line" id="statusLine"><span class="status-dot" id="statusDot"></span><span id="statusText">offline – anxious</span></div>
-            <p class="tagline"><span id="taglineText"></span><span class="tagline-cursor" aria-hidden="true">|</span></p>
-
-            <div class="social-row" id="socialRow">
-                <a class="social-btn" href="https://discord.com/users/codedsum" target="_blank" rel="noopener" aria-label="Discord"><i class="fab fa-discord"></i></a>
-                <a class="social-btn" href="https://github.com/codedshit" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                <a class="social-btn" href="https://anilist.co/user/Klxxy/" target="_blank" rel="noopener" aria-label="AniList"><i class="fas fa-leaf"></i></a>
-                <a class="social-btn spotify" href="https://open.spotify.com/user/31oyzi66p57fkbpncfhkvt2nxi2u?si=mo0CblPkTimLfeh4JG0oLA&utm_source=copy-link" target="_blank" rel="noopener" aria-label="Spotify"><i class="fab fa-spotify"></i></a>
-            </div>
-
-            <div class="discord-widgets-row" id="discordWidgetsRow"></div>
-
-            <div class="badge-feature">
-                <span class="badge-feature-icon">📚</span>
-                <div class="badge-feature-text">
-                    <span class="badge-feature-title">Learning addict</span>
-                    <span class="badge-feature-sub">i have to learn everything</span>
-                </div>
-            </div>
-
-            <div class="local-time-chip" id="localTimeChip">
-                <div class="ltc-row"><i class="fas fa-user-clock"></i> <span id="localTimeVal">--:--</span> your time</div>
-                <div class="ltc-row"><i class="fas fa-map-pin"></i> <span id="theirTimeVal">--:--</span> my time</div>
-                <div class="ltc-row" id="viewCounterRow" style="display:none;"><i class="fas fa-eye"></i> <span id="viewCountVal">--</span> views</div>
-            </div>
-        </aside>
-
-        <!-- ===================== TABS + PANELS ===================== -->
-        <div class="content-col">
-            <div class="tab-shell">
-                <nav class="tab-rail" id="tabRail">
-                    <button class="tab-btn active" data-tab="intel" onclick="switchTab('intel')"><i class="fas fa-satellite-dish"></i> <span>Intel</span></button>
-                    <button class="tab-btn" data-tab="vibe" onclick="switchTab('vibe')"><i class="fas fa-bolt"></i> <span>Vibe</span></button>
-                    <button class="tab-btn" data-tab="music" onclick="switchTab('music')"><i class="fas fa-music"></i> <span>Music</span></button>
-                </nav>
-
-                <div class="tab-panels">
-
-                    <!-- ============ INTEL / BIO ============ -->
-                    <div class="tab-panel active" id="tab-intel">
-                        <div class="panel-card glass">
-                            <div class="panel-eyebrow"><i class="fas fa-satellite-dish"></i>about</div>
-                            <div class="panel-title">Intel</div>
-
-                            <p class="about-text" id="aboutText">Tormented.</p>
-
-                            <div class="ring-grid" id="statRings">
-                                <div class="ring-tile" style="background:linear-gradient(120deg, var(--rose-soft), transparent 75%); border-color:rgba(46,24,84,.28);">
-                                    <div class="ring-svg-wrap">
-                                        <svg class="ring-svg" viewBox="0 0 78 78">
-                                            <circle class="ring-track" cx="39" cy="39" r="33"></circle>
-                                            <circle class="ring-fill" cx="39" cy="39" r="33" data-pct="60" style="stroke:var(--rose)"></circle>
-                                        </svg>
-                                        <div class="ring-center"><span class="ring-emoji">🧊</span><span class="ring-pct">60%</span></div>
-                                    </div>
-                                    <div class="ring-hero-text">
-                                        <span class="ring-hero-title">petrified</span>
-                                        <span class="ring-hero-sub">Dont expect anything from me</span>
-                                    </div>
-                                </div>
-                                <div class="ring-tile" style="background:linear-gradient(120deg, var(--violet-soft), transparent 75%); border-color:rgba(91,42,158,.28);">
-                                    <div class="ring-svg-wrap">
-                                        <svg class="ring-svg" viewBox="0 0 78 78">
-                                            <circle class="ring-track" cx="39" cy="39" r="33"></circle>
-                                            <circle class="ring-fill" cx="39" cy="39" r="33" data-pct="40" style="stroke:var(--violet)"></circle>
-                                        </svg>
-                                        <div class="ring-center"><span class="ring-emoji">💤</span><span class="ring-pct">40%</span></div>
-                                    </div>
-                                    <div class="ring-hero-text">
-                                        <span class="ring-hero-title">sleeping</span>
-                                        <span class="ring-hero-sub">sleeping is the key</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-block">
-                                <div class="info-block-title"><i class="fas fa-location-dot"></i>Location</div>
-                                <div class="tag-row">
-                                    <span class="tag-chip copyable" id="coordChip" onclick="copyCoords()" title="click to copy">41°36′28.4″N, 71°21′41.2″W</span>
-                                </div>
-                            </div>
-
-                            <div class="info-block">
-                                <div class="info-block-title"><i class="fas fa-cake-candles"></i>Birthday</div>
-                                <div class="bday-row">
-                                    <div class="bday-ring-wrap">
-                                        <svg class="ring-svg" viewBox="0 0 78 78">
-                                            <circle class="ring-track" cx="39" cy="39" r="33"></circle>
-                                            <circle class="ring-fill" id="bdayRing" cx="39" cy="39" r="33" data-pct="0" style="stroke:url(#bdayGrad)"></circle>
-                                            <defs>
-                                                <linearGradient id="bdayGrad" x1="0" y1="0" x2="1" y2="1">
-                                                    <stop offset="0" stop-color="var(--violet)"></stop>
-                                                    <stop offset="1" stop-color="var(--rose)"></stop>
-                                                </linearGradient>
-                                            </defs>
-                                        </svg>
-                                        <div class="ring-center"><span class="ring-emoji">🎂</span></div>
-                                    </div>
-                                    <div class="bday-facts">
-                                        <div class="bday-days" id="bdayDays">counting…</div>
-                                        <div class="bday-sub" id="bdaySub">Nov 1</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-block">
-                                <div class="info-block-title"><i class="fas fa-tv"></i> Best written anime</div>
-                                <div class="tag-row">
-                                    <span class="tag-chip tag-chip-featured">🍂 Clannad</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ============ VIBE ============ -->
-                    <div class="tab-panel" id="tab-vibe">
-                        <div class="panel-card glass">
-                            <div class="vibe-header">
-                                <i class="fas fa-satellite-dish" style="color:var(--violet-strong); font-size:13px;"></i>
-                                <span class="panel-eyebrow" style="margin:0;">right now</span>
-                                <div class="vibe-live-dot"></div>
-                            </div>
-
-                            <div class="vsn-grid">
-                                <div style="display:flex;flex-direction:column;align-items:center;">
-                                    <div class="vsn-orb"><span id="vsnEmoji">🎧</span></div>
-                                    <div class="vsn-mood-tag" id="vsnMoodTag">Relaxed with music</div>
-                                </div>
-                                <div class="vsn-info-col">
-                                    <p class="vsn-caption" id="vsnCaption">lost in a random eurodance playlist</p>
-                                    <div class="vsn-fixation-row"><span class="vsn-fixation-label">obsessing over</span><span class="vsn-fixation-val" id="vsnFix">romance</span></div>
-                                    <div class="vsn-fixation-row"><span class="vsn-fixation-label">currently into</span><span class="vsn-fixation-val" id="vsnInto">new eurodance songs</span></div>
-                                </div>
-                            </div>
-
-                            <div class="vsn-tags-row">
-                                <span class="tag-chip">a little too well</span>
-                                <span class="tag-chip">anti-social?</span>
-                            </div>
-
-                            <div class="vibe-divider"></div>
-
-                            <div class="live-stat-row">
-                                <div class="live-stat">
-                                    <span class="live-stat-label">your local time</span>
-                                    <span class="live-stat-val" id="vibeClock">--:--</span>
-                                </div>
-                                <div class="live-stat">
-                                    <span class="live-stat-label">you've been here</span>
-                                    <span class="live-stat-val" id="sessionTimer">0:00</span>
-                                </div>
-                            </div>
-
-                            <div class="now-playing-line" id="vibeNowPlaying"><i class="fas fa-music"></i> checking what I'm listening to…</div>
-                        </div>
-                    </div>
-
-                    <!-- ============ MUSIC ============ -->
-                    <div class="tab-panel" id="tab-music">
-                        <div class="panel-card glass">
-                            <div class="panel-eyebrow"><i class="fab fa-lastfm"></i> now playing</div>
-                            <div class="lfm-hero">
-                                <div class="lfm-art-wrap">
-                                    <img class="lfm-art" id="lfm-art" src="https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png" alt="Album art">
-                                </div>
-                                <div class="lfm-text">
-                                    <div class="lfm-track-row">
-                                        <span class="lfm-track" id="lfm-track">loading…</span>
-                                        <div class="eq-bars" id="lfm-eq"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-                                    </div>
-                                    <div class="lfm-artist" id="lfm-artist"></div>
-                                    <div class="lfm-status" id="lfm-status"></div>
-                                </div>
-                            </div>
-
-                            <div class="section-label">recently played</div>
-                            <div id="recentList"></div>
-
-                            <div class="section-label" style="margin-top:22px;">this week's rotation</div>
-                            <div class="top-artists-row" id="topArtists"></div>
-
-                            <div class="player-card">
-                                <div class="section-label">playlist</div>
-
-                                <div class="player" id="playerUI" style="display:none;">
-                                    <div class="player-top">
-                                        <div class="player-cover-wrap" id="playerCoverWrap">
-                                            <img class="player-cover" id="playerCover" src="" alt="" style="display:none;">
-                                            <div class="player-cover-fallback" id="playerCoverFallback"><i class="fas fa-music"></i></div>
-                                        </div>
-                                        <div class="player-info">
-                                            <div class="player-title" id="playerTitle">—</div>
-                                            <div class="player-artist" id="playerArtist"></div>
-                                            <div class="player-index" id="playerIndex">1 / 1</div>
-                                        </div>
-                                        <div class="eq-bars" id="playerEq"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
-                                    </div>
-
-                                    <div class="progress-wrap" id="progWrap"><div class="progress-fill" id="progFill"></div></div>
-                                    <div class="player-times"><span id="curTime">0:00</span><span id="durTime">0:00</span></div>
-
-                                    <div class="player-controls">
-                                        <button class="pctrl" onclick="playerPrev()" aria-label="Previous track"><i class="fas fa-step-backward"></i></button>
-                                        <button class="pctrl" id="shuffleBtn" onclick="playerShuffleToggle()" aria-label="Toggle shuffle"><i class="fas fa-random"></i></button>
-                                        <button class="pctrl play-btn" id="playBtn" onclick="playerToggle()" aria-label="Play or pause"><i class="fas fa-play"></i></button>
-                                        <button class="pctrl" id="repeatBtn" onclick="playerRepeatToggle()" aria-label="Toggle repeat"><i class="fas fa-redo"></i></button>
-                                        <button class="pctrl" onclick="playerNext()" aria-label="Next track"><i class="fas fa-step-forward"></i></button>
-                                    </div>
-
-                                    <div class="player-extra">
-                                        <button class="pctrl" id="likeBtn" onclick="playerLikeToggle()" aria-label="Like track"><i class="far fa-heart"></i></button>
-                                        <button class="pctrl speed-btn" id="speedBtn" onclick="playerSpeedCycle()" aria-label="Playback speed">1x</button>
-                                    </div>
-
-                                    <div class="player-vol">
-                                        <i class="fas fa-volume-down"></i>
-                                        <input type="range" id="volSlider" min="0" max="100" value="70" aria-label="Volume">
-                                        <i class="fas fa-volume-up"></i>
-                                    </div>
-
-                                    <div class="playlist-queue" id="playlistQueue"></div>
-                                </div>
-
-                                <div class="player-empty" id="playerEmpty">
-                                    <i class="fas fa-compact-disc"></i>
-                                    no tracks loaded yet — grab a public ID from your <code>dgus0vior</code> Cloudinary media library and drop it into the <code>songs</code> list near the top of the script.
-                                </div>
-
-                                <audio id="audioEl" preload="metadata"></audio>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+            <div><label>Main accent — light shade</label>
+                <div class="row"><input type="color" id="violetStrong"><input type="text" id="violetStrongHex"></div>
             </div>
         </div>
+        <div class="row">
+            <div><label>Secondary accent (rose)</label>
+                <div class="row"><input type="color" id="rose"><input type="text" id="roseHex"></div>
+            </div>
+            <div><label>Secondary accent — light shade</label>
+                <div class="row"><input type="color" id="roseStrong"><input type="text" id="roseStrongHex"></div>
+            </div>
+        </div>
+        <button onclick="saveTheme()">Save theme</button>
+        <div class="msg" id="themeMsg"></div>
     </div>
-</main>
 
-<footer class="site-footer">made by Ash ✦ <span id="current-year"></span></footer>
+    <!-- BG VIDEO -->
+    <div class="section" id="tab-video">
+        <h2 class="panel-h">Background video</h2>
+        <p class="sub">Autoplaying video behind the page. Needs the Uploads tab set up first if you're uploading a file directly (Cloudinary cloud name + unsigned upload preset).</p>
+        <label>Video URL (leave blank to remove)</label>
+        <input type="url" id="videoUrl" placeholder="https://... or videos/bg.mp4">
+        <label>...or upload a video file directly</label>
+        <input type="file" id="videoFile" accept="video/*">
+        <button type="button" class="secondary" onclick="uploadVideoFile()">Upload video</button>
+        <div class="progress-track" id="videoProgressTrack"><div class="progress-fill" id="videoProgressFill"></div></div>
+        <label>Opacity (0–1)</label>
+        <input type="number" id="videoOpacity" min="0" max="1" step="0.05" value="0.55">
+        <button onclick="saveVideo()">Save background video</button>
+        <div class="msg" id="videoMsg"></div>
+        <p class="sub" style="margin-top:14px;">
+            If the upload fails: make sure the Cloudinary upload preset's <b>Signing Mode</b> is
+            <b>Unsigned</b> and that its <b>resource type</b> allows video (Cloudinary → preset settings).
+            Free unsigned presets cap uploads around 100MB — a large video may need compressing first.
+            The button above shows the exact error Cloudinary returns if it fails.
+        </p>
+    </div>
+
+    <!-- IDENTITY -->
+    <div class="section" id="tab-identity">
+        <h2 class="panel-h">Identity</h2>
+        <label>Display name</label>
+        <input type="text" id="idName" placeholder="Ash">
+        <label>Taglines (one per line — leave empty to use the site's built-in defaults)</label>
+        <textarea id="idTaglines" placeholder="line one&#10;line two"></textarea>
+        <label>Avatar image URL (leave blank to keep current)</label>
+        <input type="url" id="idAvatar" placeholder="https://...">
+        <label>...or upload a photo directly</label>
+        <input type="file" id="idAvatarFile" accept="image/*">
+        <button type="button" class="secondary" onclick="uploadAvatar()">Upload photo</button>
+        <label>Avatar frame</label>
+        <select id="idFrame">
+            <option value="none">None</option>
+            <option value="gold">Gold ring (premium)</option>
+            <option value="holo">Holo ring</option>
+        </select>
+        <button onclick="saveIdentity()">Save identity</button>
+        <div class="msg" id="identityMsg"></div>
+    </div>
+
+    <!-- BIO: about text, stat rings, location, birthday, timezone, lastfm -->
+    <div class="section" id="tab-bio">
+        <label>About / bio text</label>
+        <textarea id="bioAbout" placeholder="A short line about you"></textarea>
+
+        <hr>
+        <div id="ringList"></div>
+        <label>Ring emoji</label>
+        <input type="text" id="ringEmoji" placeholder="🧊" maxlength="4">
+        <label>Ring title</label>
+        <input type="text" id="ringTitle" placeholder="petrified">
+        <label>Ring subtitle</label>
+        <input type="text" id="ringSub" placeholder="short caption">
+        <div class="row">
+            <div><label>Percent (0–100)</label><input type="number" id="ringPct" min="0" max="100" value="50"></div>
+            <div><label>Color</label>
+                <select id="ringColor"><option value="rose">Rose</option><option value="violet">Violet</option></select>
+            </div>
+        </div>
+        <button onclick="addRing()">Add ring</button>
+        <p class="sub">Rings show as circular stat gauges in your Intel tab (max 2 looks best, but any number works).</p>
+
+        <hr>
+        <label>Location text</label>
+        <input type="text" id="bioLocation" placeholder="coordinates or city">
+        <div class="row">
+            <div><label>Birthday month (1–12)</label><input type="number" id="bioBdayMonth" min="1" max="12" value="1"></div>
+            <div><label>Birthday day</label><input type="number" id="bioBdayDay" min="1" max="31" value="1"></div>
+        </div>
+        <label>Birthday label (shown on the site)</label>
+        <input type="text" id="bioBdayLabel" placeholder="Nov 1">
+        <label>Your timezone (IANA name)</label>
+        <input type="text" id="bioTimezone" placeholder="Europe/Helsinki">
+        <label>Last.fm username</label>
+        <input type="text" id="bioLastfm" placeholder="your Last.fm username">
+        <button onclick="saveBio()">Save bio</button>
+        <div class="msg" id="bioMsg"></div>
+    </div>
+
+    <!-- SOCIALS -->
+    <div class="section" id="tab-socials">
+        <div id="socialList"></div>
+        <hr>
+        <label>Icon (Font Awesome class)</label>
+        <input type="text" id="socialIcon" placeholder="fab fa-discord">
+        <p class="sub" style="margin:2px 0 0;">Common ones: <code>fab fa-discord</code>, <code>fab fa-github</code>,
+            <code>fab fa-instagram</code>, <code>fab fa-tiktok</code>, <code>fab fa-x-twitter</code>,
+            <code>fab fa-spotify</code>, <code>fas fa-link</code></p>
+        <label>Label</label>
+        <input type="text" id="socialLabel" placeholder="Discord">
+        <label>URL</label>
+        <input type="url" id="socialUrl" placeholder="https://...">
+        <button onclick="addSocial()">Add social link</button>
+        <div class="msg" id="socialsMsg"></div>
+    </div>
+
+    <!-- SONGS -->
+    <div class="section" id="tab-songs">
+        <div id="songList"></div>
+        <hr>
+        <label>Title</label>
+        <input type="text" id="songTitle">
+        <label>Artist</label>
+        <input type="text" id="songArtist">
+        <label>Cloudinary audio public ID</label>
+        <input type="text" id="songId" placeholder="e.g. my_track_abc123">
+        <label>Cloudinary cover image public ID (optional)</label>
+        <input type="text" id="songCover">
+        <label>...or upload the audio file directly</label>
+        <input type="file" id="songAudioFile" accept="audio/*">
+        <label>...or upload a cover image directly</label>
+        <input type="file" id="songCoverFile" accept="image/*">
+        <button id="songSubmitBtn" onclick="addSong()">Add song</button>
+        <div class="msg" id="songsMsg"></div>
+    </div>
+
+    <!-- BADGES -->
+    <div class="section" id="tab-badges">
+        <div id="badgeList"></div>
+        <hr>
+        <label>Emoji or icon image URL</label>
+        <input type="text" id="badgeIcon" placeholder="👑  or  https://example.com/icon.png">
+        <label>Label</label>
+        <input type="text" id="badgeLabel" placeholder="Premium">
+        <label>Color (hex, optional)</label>
+        <div class="row"><input type="color" id="badgeColor" value="#FFD700"><input type="text" id="badgeColorHex" value="#FFD700"></div>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+            <input type="checkbox" id="badgeGlow" style="width:auto;"> Make it glow (pulsing color glow)
+        </label>
+        <button onclick="addBadge()">Add badge</button>
+        <div class="msg" id="badgesMsg"></div>
+    </div>
+
+    <!-- PAGE TABS: show/hide, relabel, re-icon the site's Intel/Vibe/Music tabs -->
+    <div class="section" id="tab-pagetabs">
+        <h2 class="panel-h">Built-in tabs</h2>
+        <p class="sub">Control which of the site's tabs are visible, and their label/icon. (The content inside each tab — bio, stats, player — isn't a page-builder yet; this controls visibility and naming. Want a whole new tab with your own content? See Custom Tabs &amp; Widgets.)</p>
+        <div id="pageTabsList"></div>
+        <button onclick="saveTabs()">Save tabs</button>
+        <div class="msg" id="pageTabsMsg"></div>
+    </div>
+
+    <!-- CUSTOM TABS & WIDGETS: fully dashboard-defined extra tabs + cards -->
+    <div class="section" id="tab-customtabs">
+        <h2 class="panel-h">Custom tabs &amp; widgets</h2>
+        <p class="sub">Add entirely new tabs next to Intel/Vibe/Music, each holding any number of free-form cards (a title + icon + text) — use these for hobbies, more about-me sections, anything.</p>
+
+        <div id="customTabsList"></div>
+
+        <div class="field-card">
+            <label style="margin-top:0;">New tab name</label>
+            <input type="text" id="ctName" placeholder="e.g. Hobbies">
+            <label>Icon (Font Awesome class)</label>
+            <input type="text" id="ctIcon" placeholder="fas fa-star">
+            <button type="button" class="secondary" onclick="addCustomTab()">Add tab</button>
+        </div>
+
+        <hr>
+        <label>Add a card to tab</label>
+        <select id="ctTargetTab"></select>
+        <label>Eyebrow (small label above title, optional)</label>
+        <input type="text" id="ctCardEyebrow" placeholder="e.g. about">
+        <label>Card title</label>
+        <input type="text" id="ctCardTitle" placeholder="e.g. Hobbies">
+        <label>Card body text</label>
+        <textarea id="ctCardBody" placeholder="Whatever you want to say here."></textarea>
+        <button type="button" class="secondary" onclick="addCustomCard()">Add card</button>
+        <div class="msg" id="customTabsMsg"></div>
+    </div>
+
+    <!-- APPEARANCE: sizing sliders (with reset), fonts, entry screen text, card transparency -->
+    <div class="section" id="tab-appearance">
+        <h2 class="panel-h">Appearance</h2>
+        <p class="sub">Drag any slider to resize that element. Each shows the normal (default) size, and Reset puts it back. These sizes apply the same on mobile and desktop.</p>
+
+        <label>Avatar size <span id="avatarSizeVal" class="sub"></span></label>
+        <input type="range" id="avatarSize" min="70" max="220" step="2">
+        <button type="button" class="secondary" onclick="resetSize('avatarSize',112)">Reset (default: 112px)</button>
+
+        <label style="margin-top:18px;">Name text size <span id="nameSizeVal" class="sub"></span></label>
+        <input type="range" id="nameSize" min="20" max="64" step="1">
+        <button type="button" class="secondary" onclick="resetSize('nameSize',36)">Reset (default: auto-responsive)</button>
+
+        <label style="margin-top:18px;">Tagline text size <span id="taglineSizeVal" class="sub"></span></label>
+        <input type="range" id="taglineSize" min="12" max="28" step="1">
+        <button type="button" class="secondary" onclick="resetSize('taglineSize',17)">Reset (default: 17px)</button>
+
+        <label style="margin-top:18px;">Stat ring size <span id="ringSizeVal" class="sub"></span></label>
+        <input type="range" id="ringSize" min="50" max="140" step="2">
+        <button type="button" class="secondary" onclick="resetSize('ringSize',82)">Reset (default: 82px)</button>
+
+        <label style="margin-top:18px;">Badge size <span id="badgeSizeVal" class="sub"></span></label>
+        <input type="range" id="badgeSize" min="9" max="18" step="1">
+        <button type="button" class="secondary" onclick="resetSize('badgeSize',11)">Reset (default: 11px)</button>
+
+        <hr>
+        <label>Card transparency <span id="cardOpacityVal" class="sub"></span></label>
+        <input type="range" id="cardOpacity" min="0" max="1" step="0.05">
+        <p class="sub" style="margin:2px 0 0;">0 = fully see-through cards, 1 = fully solid. Applies to every card on the site.</p>
+
+        <label style="margin-top:18px;">Card border visibility <span id="cardBorderOpacityVal" class="sub"></span></label>
+        <input type="range" id="cardBorderOpacity" min="0" max="1" step="0.05">
+        <p class="sub" style="margin:2px 0 0;">0 removes card edges entirely, 1 is the normal subtle border.</p>
+
+        <hr>
+        <label>Heading font</label>
+        <select id="fontDisplay"></select>
+        <label>Tagline/quote font</label>
+        <select id="fontQuote"></select>
+        <label>"Click to enter" screen font</label>
+        <select id="fontEntry"></select>
+        <p class="sub" style="margin:2px 0 0;">Upload your own fonts in the Fonts tab and they'll show up in these lists too.</p>
+
+        <hr>
+        <label>"Click to enter" screen text</label>
+        <input type="text" id="entryText" placeholder="Click to enter">
+
+        <button onclick="saveAppearance()" style="margin-top:16px;">Save appearance</button>
+        <div class="msg" id="appearanceMsg"></div>
+    </div>
+
+    <!-- FONTS: upload custom font files, committed straight to the repo -->
+    <div class="section" id="tab-fonts">
+        <h2 class="panel-h">Fonts</h2>
+        <p class="sub">Upload a font file (.ttf, .otf, .woff, .woff2) and it's committed to your GitHub repo under <code>public/fonts/</code>, then shows up as an option anywhere you pick a font. Takes ~30–60s to go live after uploading (same as any other save, since it's a small deploy).</p>
+
+        <div id="customFontsList"></div>
+
+        <div class="field-card">
+            <label style="margin-top:0;">Font name (how it'll appear in dropdowns)</label>
+            <input type="text" id="fontName" placeholder="e.g. My Cool Font">
+            <label>Font file</label>
+            <input type="file" id="fontFile" accept=".ttf,.otf,.woff,.woff2">
+            <button type="button" class="secondary" onclick="uploadFont()">Upload font</button>
+            <div class="progress-track" id="fontProgressTrack"><div class="progress-fill" id="fontProgressFill"></div></div>
+            <div class="msg" id="fontsMsg"></div>
+        </div>
+    </div>
+
+    <!-- UPLOADS: one-time Cloudinary setup so files can be uploaded directly -->
+    <div class="section" id="tab-uploads">
+        <h2 class="panel-h">Uploads</h2>
+        <p class="sub">One-time setup so you can drag in photos/audio/video from this panel instead of hosting them elsewhere first. Free, no code.</p>
+        <label>Cloudinary cloud name</label>
+        <input type="text" id="cloudName" placeholder="dgus0vior">
+        <label>Unsigned upload preset</label>
+        <input type="text" id="uploadPreset" placeholder="e.g. ash_uploads">
+        <p class="sub" style="margin-top:6px;">
+            Create one free: Cloudinary dashboard → <b>Settings</b> → <b>Upload</b> →
+            <b>Upload presets</b> → <b>Add upload preset</b> → set Signing Mode to
+            <b>Unsigned</b> → Save → paste its name above.
+            <br><br>
+            Note: an unsigned preset is inherently public — anyone who inspects the
+            page's network requests could see it and upload using it too. In
+            Cloudinary's preset settings, set a max file size and allowed formats to
+            keep that safe.
+        </p>
+        <button onclick="saveUploads()">Save upload settings</button>
+        <div class="msg" id="uploadsMsg"></div>
+    </div>
+
+    <!-- DISCORD: live status + optional profile/server widgets -->
+    <div class="section" id="tab-discord">
+        <h2 class="panel-h">Discord</h2>
+        <label>Discord user ID (for live status widget)</label>
+        <input type="text" id="discordUserId" placeholder="123456789012345678">
+        <p class="sub" style="margin:6px 0 0;">Requires your Discord account to be in the
+            <a href="https://discord.gg/lanyard" target="_blank" style="color:var(--violet-strong);">Lanyard</a>
+            server to work — that's what powers the live status.</p>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:16px;">
+            <input type="checkbox" id="discordEnabled" style="width:auto;"> Enable live Discord status line
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+            <input type="checkbox" id="discordShowSpotify" style="width:auto;"> Show what I'm listening to on Spotify
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="discordShowActivity" style="width:auto;"> Show what game/app I'm using
+        </label>
+
+        <hr>
+        <label style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="dwProfileEnabled" style="width:auto;"> Show a Discord profile card (avatar + live status)
+        </label>
+        <p class="sub" style="margin:2px 0 0;">Uses the Discord user ID above.</p>
+
+        <label style="display:flex;align-items:center;gap:8px;margin-top:14px;">
+            <input type="checkbox" id="dwServerEnabled" style="width:auto;"> Show a Discord server widget
+        </label>
+        <label>Server (guild) ID</label>
+        <input type="text" id="dwServerId" placeholder="123456789012345678">
+        <label>Invite URL (optional — used if the widget's own invite link doesn't work)</label>
+        <input type="url" id="dwInviteUrl" placeholder="https://discord.gg/...">
+        <p class="sub" style="margin:2px 0 0;">The target server must have <b>Server Widget</b> enabled: Server Settings → Widget → Enable Server Widget.</p>
+
+        <button onclick="saveDiscordAll()" style="margin-top:16px;">Save Discord settings</button>
+        <div class="msg" id="discordMsg"></div>
+    </div>
+
+    <!-- EFFECTS -->
+    <div class="section" id="tab-extras">
+        <h2 class="panel-h">Effects</h2>
+        <label style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="fxScrollReveal" style="width:auto;"> Scroll reveal animations
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" id="fxViewCounter" style="width:auto;"> View counter
+        </label>
+        <button onclick="saveExtras()">Save extras</button>
+        <div class="msg" id="extrasMsg"></div>
+    </div>
+
+    </div>
+</div>
+</div>
 
 <script>
-/* =====================================================================
-   CONFIG
-   ===================================================================== */
-const LFM_KEY  = '84e191b366d86d98c1db2a74b5b39ef4';
-let LFM_USER = 'Ashy-geek';
-const LFM_DEFAULT_ART = 'https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png';
-let COORDS = '41°36′28.4″N, 71°21′41.2″W';
-let MY_TIMEZONE = 'Europe/Helsinki';
-let BDAY_MONTH = 11, BDAY_DAY = 1;
-const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let currentConfig = null;
 
-/* ---- BACKGROUND VIDEO ------------------------------------------------
-   Defaults below; overridden by config.json if the dashboard sets values.
------------------------------------------------------------------------- */
-let BG_VIDEO_SRC = ''; // e.g. 'videos/bg.mp4'
-let BG_VIDEO_OPACITY = 0.55;
+// ---- login ----
+document.getElementById('loginBtn').onclick = async () => {
+    const password = document.getElementById('password').value;
+    const msg = document.getElementById('loginMsg');
+    msg.textContent = ''; msg.className = 'msg';
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+        });
+        if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Login failed'); }
+        showDashboard();
+    } catch (e) {
+        msg.textContent = e.message; msg.className = 'msg err';
+    }
+};
+document.getElementById('password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('loginBtn').click();
+});
 
-function initBgVideo(){
-    const vid = document.getElementById('bg-video');
-    if (!vid) return;
-    if (!BG_VIDEO_SRC || REDUCED_MOTION){
-        vid.style.display = 'none';
-        document.body.classList.remove('has-bg-video');
+async function logout() {
+    await fetch('/api/logout', { method: 'POST' });
+    document.getElementById('dashCard').style.display = 'none';
+    document.getElementById('loginCard').style.display = 'block';
+}
+
+// ---- tabs ----
+document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    };
+});
+
+// ---- load + show ----
+async function showDashboard() {
+    document.getElementById('loginCard').style.display = 'none';
+    document.getElementById('dashCard').style.display = 'block';
+    const res = await fetch('/api/config');
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.statusText }));
+        alert('Config Error: ' + (err.error || 'Failed to load'));
         return;
     }
-    vid.src = BG_VIDEO_SRC;
-    vid.style.opacity = BG_VIDEO_OPACITY;
-    vid.style.display = 'block';
-    document.body.classList.add('has-bg-video');
+    currentConfig = await res.json();
+    populate();
+}
+    
+function populate() {
+    const t = currentConfig.theme || {};
+    setColor('violet', t.violet || '#5B2A9E');
+    setColor('violetStrong', t.violetStrong || '#7C4DCE');
+    setColor('rose', t.rose || '#2E1854');
+    setColor('roseStrong', t.roseStrong || '#402070');
+
+    const bg = currentConfig.backgroundVideo || {};
+    document.getElementById('videoUrl').value = bg.src || '';
+    document.getElementById('videoOpacity').value = (typeof bg.opacity === 'number') ? bg.opacity : 0.55;
+
+    const id = currentConfig.identity || {};
+    document.getElementById('idName').value = id.name || '';
+    document.getElementById('idTaglines').value = (id.taglines || []).join('\n');
+    document.getElementById('idAvatar').value = id.avatar || '';
+    document.getElementById('idFrame').value = id.frame || 'none';
+
+    const discord = currentConfig.discord || {};
+    document.getElementById('discordUserId').value = discord.userId || '';
+    document.getElementById('discordEnabled').checked = !!discord.enabled;
+    document.getElementById('discordShowSpotify').checked = discord.showSpotify !== false;
+    document.getElementById('discordShowActivity').checked = discord.showActivity !== false;
+
+    const dw = currentConfig.discordWidgets || {};
+    document.getElementById('dwProfileEnabled').checked = !!dw.profileEnabled;
+    document.getElementById('dwServerEnabled').checked = !!dw.serverEnabled;
+    document.getElementById('dwServerId').value = dw.serverId || '';
+    document.getElementById('dwInviteUrl').value = dw.inviteUrl || '';
+
+    const fx = currentConfig.effects || {};
+    document.getElementById('fxScrollReveal').checked = fx.scrollReveal !== false;
+    document.getElementById('fxViewCounter').checked = fx.viewCounter !== false;
+
+    const up = currentConfig.uploads || {};
+    document.getElementById('cloudName').value = up.cloudName || '';
+    document.getElementById('uploadPreset').value = up.uploadPreset || '';
+
+    const bio = currentConfig.bio || {};
+    document.getElementById('bioAbout').value = bio.about || '';
+    document.getElementById('bioLocation').value = bio.location || '';
+    document.getElementById('bioBdayMonth').value = bio.birthdayMonth || 1;
+    document.getElementById('bioBdayDay').value = bio.birthdayDay || 1;
+    document.getElementById('bioBdayLabel').value = bio.birthdayLabel || '';
+    document.getElementById('bioTimezone').value = bio.timezone || '';
+    document.getElementById('bioLastfm').value = bio.lastfmUser || '';
+
+    const app = currentConfig.appearance || {};
+    resetSize('avatarSize', 112, app.avatarSize);
+    resetSize('nameSize', 36, app.nameSize);
+    resetSize('taglineSize', 17, app.taglineSize);
+    resetSize('ringSize', 82, app.ringSize);
+    resetSize('badgeSize', 11, app.badgeSize);
+    resetOpacity('cardOpacity', 0.66, app.cardOpacity);
+    resetOpacity('cardBorderOpacity', 1, app.cardBorderOpacity);
+    populateFontSelects();
+    document.getElementById('fontDisplay').value = app.fontDisplay || '';
+    document.getElementById('fontQuote').value = app.fontQuote || '';
+    document.getElementById('fontEntry').value = app.fontEntry || '';
+    document.getElementById('entryText').value = app.entryText || '';
+
+    renderSongs();
+    renderBadges();
+    renderRings();
+    renderSocials();
+    renderPageTabs();
+    renderCustomTabsList();
+    renderCustomFontsList();
 }
 
-/* =====================================================================
-   { title: 'Track Name', artist: 'Artist Name', id: 'songs/track1', cover: 'covers/track1' }
-   Defaults below; overridden by config.json "songs" if non-empty.
-   ===================================================================== */
-const CLOUD_NAME = 'dgus0vior';
-let songs = [
-   { title: 'do i clench my fists?', artist: 'ridgeclub', id: 'do_i_clench_my_fists_nnpglh', cover: '270183aaba377f63e529d91594d02a4e_ufx1ur' }
-   ];
-
-function cldAudio(publicId){
-    if (!publicId) return '';
-    if (/^https?:\/\//i.test(publicId)) return publicId; // already a full URL (e.g. from a direct upload)
-    const clean = publicId.replace(/^\/+/, '').replace(/\.(mp3|wav|ogg|m4a|aac)$/i, '');
-    return `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/${clean}.mp3`;
-}
-function cldImage(publicId){
-    if (!publicId) return '';
-    if (/^https?:\/\//i.test(publicId)) return publicId; // already a full URL (e.g. from a direct upload)
-    const clean = publicId.replace(/^\/+/, '');
-    return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${clean}`;
-}
-function randomTrackIndex(){
-    return songs.length ? Math.floor(Math.random() * songs.length) : 0;
-}
-
-document.getElementById('current-year').textContent = new Date().getFullYear();
-
-/* =====================================================================
-   ENTRY OVERLAY
-   ===================================================================== */
-function enterSite() {
-    const overlay = document.getElementById('entry-overlay');
-    overlay.classList.add('hidden');
-    setTimeout(() => { overlay.style.display = 'none'; }, 850);
-    if (songs.length) loadTrack(randomTrackIndex(), true);
-}
-
-/* =====================================================================
-   TYPEWRITER — goes out, then comes back (used for entry + tagline)
-   ===================================================================== */
-function typewriterLoop(el, lines){
-    if (!el) return;
-    if (REDUCED_MOTION){ el.textContent = lines[0]; return; }
-    let li = 0;
-    const typeSpeed = 46, deleteSpeed = 26, minHold = 1500, betweenPause = 550;
-
-    function typeLine(){
-        const text = lines[li];
-        let ci = 0;
-        (function typeChar(){
-            el.textContent = text.slice(0, ci);
-            if (ci < text.length){ ci++; setTimeout(typeChar, typeSpeed); }
-            else { setTimeout(deleteLine, Math.max(minHold, text.length * 95)); }
-        })();
-    }
-    function deleteLine(){
-        const text = lines[li];
-        let ci = text.length;
-        (function delChar(){
-            el.textContent = text.slice(0, ci);
-            if (ci > 0){ ci--; setTimeout(delChar, deleteSpeed); }
-            else { li = (li + 1) % lines.length; setTimeout(typeLine, betweenPause); }
-        })();
-    }
-    typeLine();
-}
-let ENTRY_TEXT = 'Click to enter';
-
-let TAGLINES = [
-    'Hey!! Howdy?',
-    'Give me a quick add on Discord, I\u2019ll add you back',
-    'Feel free to stalk me'
-];
-
-/* =====================================================================
-   REMOTE CONFIG — loads config.json (edited via the dashboard) and
-   applies it on top of all the defaults above.
-   ===================================================================== */
-function renderBadges(badges){
-    const wrap = document.getElementById('badgesRow');
-    if (!wrap) return;
-    if (!Array.isArray(badges) || !badges.length){ wrap.innerHTML = ''; return; }
-    wrap.innerHTML = badges.map(b => {
-        const icon = (b.icon || '').trim();
-        const isImg = /^https?:\/\//i.test(icon) || /\.(png|jpe?g|gif|webp|svg)(\?|$)/i.test(icon);
-        const iconHtml = isImg
-            ? `<img src="${escapeHtml(icon)}" alt="" class="badge-icon-img">`
-            : `<span>${escapeHtml(icon || '✦')}</span>`;
-        const glowClass = b.glow ? ' glow' : '';
-        const glowVar = b.glow ? `--glow-color:${escapeHtml(b.color || '#FFD700')};` : '';
-        const colorStyle = b.color ? `color:${escapeHtml(b.color)};border-color:${escapeHtml(b.color)}55;` : '';
-        return `
-        <span class="badge-chip${glowClass}" style="${glowVar}${colorStyle}" tabindex="0" role="button" aria-label="${escapeHtml(b.label || '')}">
-            ${iconHtml}<span class="badge-tip">${escapeHtml(b.label || '')}</span>
-        </span>
-    `;
-    }).join('');
-
-    // Hover already shows the tooltip via CSS (:hover); this adds tap-to-toggle
-    // support for touch devices where there's no hover state, and closes any
-    // open tooltip when tapping elsewhere.
-    wrap.querySelectorAll('.badge-chip').forEach(chip => {
-        chip.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const wasOpen = chip.classList.contains('show-tip');
-            wrap.querySelectorAll('.badge-chip.show-tip').forEach(c => c.classList.remove('show-tip'));
-            if (!wasOpen) chip.classList.add('show-tip');
-        });
-    });
-    document.addEventListener('click', () => {
-        wrap.querySelectorAll('.badge-chip.show-tip').forEach(c => c.classList.remove('show-tip'));
+// ---- fonts: built-in + any uploaded custom ones, shared across the 3 font pickers ----
+const BUILTIN_FONTS = ['Duality', 'Nightcore Demo', 'Matcha Mint', 'system-ui'];
+function populateFontSelects(){
+    const custom = (currentConfig.customFonts || []).map(f => f.name);
+    const names = [...BUILTIN_FONTS, ...custom];
+    ['fontDisplay', 'fontQuote', 'fontEntry'].forEach(id => {
+        const sel = document.getElementById(id);
+        const current = sel.value;
+        sel.innerHTML = '<option value="">Default</option>' + names.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}${n === 'system-ui' ? ' (system default)' : ''}</option>`).join('');
+        sel.value = current;
     });
 }
 
-function applyAvatarFrame(frame){
-    const el = document.getElementById('avatarFrame');
-    if (!el) return;
-    el.className = 'avatar-frame';
-    if (frame && frame !== 'none') el.classList.add('frame-' + frame);
+function renderCustomFontsList(){
+    const wrap = document.getElementById('customFontsList');
+    const fonts = currentConfig.customFonts || [];
+    wrap.innerHTML = fonts.length ? fonts.map((f, i) => `
+        <div class="item-row">
+            <span style="font-weight:600;">${escapeHtml(f.name)}</span>
+            <div class="actions"><button class="danger" onclick="removeCustomFont(${i})">Remove</button></div>
+        </div>
+    `).join('') : '<p class="sub">No custom fonts uploaded yet.</p>';
 }
 
-let viewCounterInterval = null;
-async function initViewCounter(enabled){
-    const row = document.getElementById('viewCounterRow');
-    if (!row) return;
-    if (!enabled){ row.style.display = 'none'; return; }
-    row.style.display = '';
-    try{
-        const slug = 'ashy-site-' + location.hostname.replace(/[^a-z0-9]/gi, '-');
-        const res = await fetch(`https://api.counterapi.dev/v1/${slug}/homepage/up`);
-        const data = await res.json();
-        const val = data && (data.count ?? data.value);
-        document.getElementById('viewCountVal').textContent = (typeof val === 'number') ? val.toLocaleString() : '--';
-    }catch(e){
-        row.style.display = 'none'; // fail silently if the counter service is unreachable
-    }
+function removeCustomFont(index){
+    const fonts = (currentConfig.customFonts || []).filter((_, i) => i !== index);
+    saveSection('customFonts', fonts, 'fontsMsg').then(() => { populateFontSelects(); renderCustomFontsList(); });
 }
 
-let discordPollTimer = null;
-async function initDiscordStatus(discordCfg){
-    const dot = document.getElementById('statusDot');
-    const text = document.getElementById('statusText');
-    if (!dot || !text) return;
-    if (!discordCfg || !discordCfg.enabled || !discordCfg.userId){
-        return; // keep the static fallback text already in the HTML
-    }
-    async function poll(){
-        try{
-            const res = await fetch(`https://api.lanyard.rest/v1/users/${discordCfg.userId}`);
-            const json = await res.json();
-            if (!json.success) return;
-            const d = json.data;
-            const status = d.discord_status || 'offline';
-            dot.className = 'status-dot status-' + status;
-            const showSpotify = discordCfg.showSpotify !== false;
-            const showActivity = discordCfg.showActivity !== false;
-            if (showSpotify && d.listening_to_spotify && d.spotify){
-                text.textContent = `listening to ${d.spotify.song} — ${d.spotify.artist}`;
-            } else if (showActivity && d.activities && d.activities.find(a => a.type === 0)){
-                const act = d.activities.find(a => a.type === 0);
-                text.textContent = `playing ${act.name}`;
-            } else {
-                text.textContent = status;
-            }
-        }catch(e){ /* leave last known state on transient failure */ }
-    }
-    poll();
-    if (discordPollTimer) clearInterval(discordPollTimer);
-    discordPollTimer = setInterval(poll, 20000);
+function setColor(prefix, hex) {
+    document.getElementById(prefix).value = hex;
+    document.getElementById(prefix + 'Hex').value = hex;
+}
+['violet','violetStrong','rose','roseStrong','badge'].forEach(p => {
+    document.getElementById(p).addEventListener('input', e => document.getElementById(p+'Hex').value = e.target.value);
+    document.getElementById(p+'Hex').addEventListener('input', e => {
+        if (/^#[0-9a-fA-F]{6}$/.test(e.target.value)) document.getElementById(p).value = e.target.value;
+    });
+});
+
+// ---- sizing sliders (with per-field reset) ----
+const SIZE_FIELDS = ['avatarSize', 'nameSize', 'taglineSize', 'ringSize', 'badgeSize'];
+function resetSize(id, def, val) {
+    const v = (val === undefined || val === null || val === '') ? def : val;
+    const input = document.getElementById(id);
+    input.value = v;
+    document.getElementById(id + 'Val').textContent = `(${v}px)`;
+}
+SIZE_FIELDS.forEach(id => {
+    document.getElementById(id).addEventListener('input', e => {
+        document.getElementById(id + 'Val').textContent = `(${e.target.value}px)`;
+    });
+});
+
+// ---- 0–1 opacity sliders (card transparency / border visibility) ----
+const OPACITY_FIELDS = ['cardOpacity', 'cardBorderOpacity'];
+function resetOpacity(id, def, val) {
+    const v = (val === undefined || val === null || val === '') ? def : val;
+    const input = document.getElementById(id);
+    input.value = v;
+    document.getElementById(id + 'Val').textContent = `(${v})`;
+}
+OPACITY_FIELDS.forEach(id => {
+    document.getElementById(id).addEventListener('input', e => {
+        document.getElementById(id + 'Val').textContent = `(${e.target.value})`;
+    });
+});
+
+function saveAppearance() {
+    saveSection('appearance', {
+        avatarSize: parseInt(document.getElementById('avatarSize').value, 10),
+        nameSize: parseInt(document.getElementById('nameSize').value, 10),
+        taglineSize: parseInt(document.getElementById('taglineSize').value, 10),
+        ringSize: parseInt(document.getElementById('ringSize').value, 10),
+        badgeSize: parseInt(document.getElementById('badgeSize').value, 10),
+        cardOpacity: parseFloat(document.getElementById('cardOpacity').value),
+        cardBorderOpacity: parseFloat(document.getElementById('cardBorderOpacity').value),
+        fontDisplay: document.getElementById('fontDisplay').value,
+        fontQuote: document.getElementById('fontQuote').value,
+        fontEntry: document.getElementById('fontEntry').value,
+        entryText: document.getElementById('entryText').value.trim() || 'Click to enter',
+    }, 'appearanceMsg');
 }
 
-function initScrollReveal(enabled){
-    if (!enabled || REDUCED_MOTION) return;
-    const targets = document.querySelectorAll('.panel-card, .ring-tile, .badge-feature, .local-time-chip');
-    if (!('IntersectionObserver' in window) || !targets.length) return;
-    targets.forEach(el => el.classList.add('reveal-init'));
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting){
-                entry.target.classList.add('reveal-in');
-                io.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.15 });
-    targets.forEach(el => io.observe(el));
+function renderBadges() {
+    const wrap = document.getElementById('badgeList');
+    const badges = currentConfig.badges || [];
+    wrap.innerHTML = badges.length ? badges.map((b, i) => `
+        <div class="item-row">
+            <span>${escapeHtml(b.icon || '✦')} ${escapeHtml(b.label || '')}${b.glow ? ' ✨' : ''}</span>
+            <div class="actions"><button class="danger" onclick="removeBadge(${i})">Remove</button></div>
+        </div>
+    `).join('') : '<p class="sub">No badges yet.</p>';
 }
 
-function renderRings(rings){
-    const wrap = document.getElementById('statRings');
-    if (!wrap || !Array.isArray(rings)) return;
-    if (!rings.length){ wrap.innerHTML = ''; return; }
-    wrap.innerHTML = rings.map(r => {
-        const isViolet = r.color === 'violet';
-        const bgVar = isViolet ? 'violet-soft' : 'rose-soft';
-        const borderRgba = isViolet ? '91,42,158' : '46,24,84';
-        const strokeVar = isViolet ? 'violet' : 'rose';
-        return `
-        <div class="ring-tile" style="background:linear-gradient(120deg, var(--${bgVar}), transparent 75%); border-color:rgba(${borderRgba},.28);">
-            <div class="ring-svg-wrap">
-                <svg class="ring-svg" viewBox="0 0 78 78">
-                    <circle class="ring-track" cx="39" cy="39" r="33"></circle>
-                    <circle class="ring-fill" cx="39" cy="39" r="33" data-pct="${parseFloat(r.pct)||0}" style="stroke:var(--${strokeVar})"></circle>
-                </svg>
-                <div class="ring-center"><span class="ring-emoji">${escapeHtml(r.emoji||'')}</span><span class="ring-pct">${parseFloat(r.pct)||0}%</span></div>
+function renderSongs() {
+    const wrap = document.getElementById('songList');
+    const songs = currentConfig.songs || [];
+    wrap.innerHTML = songs.length ? songs.map((s, i) => `
+        <div class="item-row">
+            <span>${escapeHtml(s.title)} — ${escapeHtml(s.artist)}</span>
+            <div class="actions">
+                <button class="secondary" onclick="editSong(${i})">Edit</button>
+                <button class="danger" onclick="removeSong(${i})">Remove</button>
             </div>
-            <div class="ring-hero-text">
-                <span class="ring-hero-title">${escapeHtml(r.title||'')}</span>
-                <span class="ring-hero-sub">${escapeHtml(r.sub||'')}</span>
+        </div>
+    `).join('') : '<p class="sub">No songs yet.</p>';
+}
+
+let editingSongIndex = null;
+function editSong(index) {
+    const s = (currentConfig.songs || [])[index];
+    if (!s) return;
+    editingSongIndex = index;
+    document.getElementById('songTitle').value = s.title || '';
+    document.getElementById('songArtist').value = s.artist || '';
+    document.getElementById('songId').value = s.id || '';
+    document.getElementById('songCover').value = s.cover || '';
+    document.getElementById('songSubmitBtn').textContent = 'Save changes';
+    document.getElementById('tab-songs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderRings() {
+    const wrap = document.getElementById('ringList');
+    const rings = (currentConfig.bio && currentConfig.bio.rings) || [];
+    wrap.innerHTML = rings.length ? rings.map((r, i) => `
+        <div class="item-row">
+            <span>${escapeHtml(r.emoji || '')} ${escapeHtml(r.title || '')} — ${r.pct || 0}%</span>
+            <div class="actions"><button class="danger" onclick="removeRing(${i})">Remove</button></div>
+        </div>
+    `).join('') : '<p class="sub">No rings yet.</p>';
+}
+
+function addRing() {
+    const emoji = document.getElementById('ringEmoji').value.trim();
+    const title = document.getElementById('ringTitle').value.trim();
+    const sub = document.getElementById('ringSub').value.trim();
+    const pct = parseInt(document.getElementById('ringPct').value, 10) || 0;
+    const color = document.getElementById('ringColor').value;
+    if (!title) {
+        const msg = document.getElementById('bioMsg');
+        msg.textContent = 'Ring title is required.'; msg.className = 'msg err';
+        return;
+    }
+    const rings = [...((currentConfig.bio && currentConfig.bio.rings) || []), { emoji, title, sub, pct, color }];
+    currentConfig.bio = { ...(currentConfig.bio || {}), rings };
+    saveSection('bio', currentConfig.bio, 'bioMsg').then(() => {
+        document.getElementById('ringEmoji').value = '';
+        document.getElementById('ringTitle').value = '';
+        document.getElementById('ringSub').value = '';
+        document.getElementById('ringPct').value = 50;
+        renderRings();
+    });
+}
+
+function removeRing(index) {
+    const rings = ((currentConfig.bio && currentConfig.bio.rings) || []).filter((_, i) => i !== index);
+    currentConfig.bio = { ...(currentConfig.bio || {}), rings };
+    saveSection('bio', currentConfig.bio, 'bioMsg').then(renderRings);
+}
+
+function renderSocials() {
+    const wrap = document.getElementById('socialList');
+    const socials = currentConfig.socials || [];
+    wrap.innerHTML = socials.length ? socials.map((s, i) => `
+        <div class="item-row">
+            <span><i class="${escapeHtml(s.icon || '')}"></i> ${escapeHtml(s.label || '')}</span>
+            <div class="actions"><button class="danger" onclick="removeSocial(${i})">Remove</button></div>
+        </div>
+    `).join('') : '<p class="sub">No social links yet.</p>';
+}
+
+function addSocial() {
+    const icon = document.getElementById('socialIcon').value.trim() || 'fas fa-link';
+    const label = document.getElementById('socialLabel').value.trim();
+    const url = document.getElementById('socialUrl').value.trim();
+    if (!label || !url) {
+        const msg = document.getElementById('socialsMsg');
+        msg.textContent = 'Label and URL are required.'; msg.className = 'msg err';
+        return;
+    }
+    const socials = [...(currentConfig.socials || []), { icon, label, url }];
+    saveSection('socials', socials, 'socialsMsg').then(() => {
+        document.getElementById('socialIcon').value = '';
+        document.getElementById('socialLabel').value = '';
+        document.getElementById('socialUrl').value = '';
+        renderSocials();
+    });
+}
+
+function removeSocial(index) {
+    const socials = (currentConfig.socials || []).filter((_, i) => i !== index);
+    saveSection('socials', socials, 'socialsMsg').then(renderSocials);
+}
+
+const PAGE_TAB_DEFS = [
+    { key: 'intel', name: 'Intel (bio/stats)' },
+    { key: 'vibe', name: 'Vibe (mood/live stats)' },
+    { key: 'music', name: 'Music (Last.fm/player)' },
+];
+function renderPageTabs() {
+    const wrap = document.getElementById('pageTabsList');
+    const tabs = currentConfig.tabs || {};
+    wrap.innerHTML = PAGE_TAB_DEFS.map(def => {
+        const t = tabs[def.key] || {};
+        return `
+        <div style="border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;">
+            <label style="display:flex;align-items:center;gap:8px;margin:0 0 8px;">
+                <input type="checkbox" id="pt-${def.key}-enabled" style="width:auto;" ${t.enabled !== false ? 'checked' : ''}>
+                <b>${def.name}</b>
+            </label>
+            <div class="row">
+                <div><label style="margin-top:0;">Tab label</label>
+                    <input type="text" id="pt-${def.key}-label" value="${escapeHtml(t.label || def.key)}"></div>
+                <div><label style="margin-top:0;">Icon (Font Awesome class)</label>
+                    <input type="text" id="pt-${def.key}-icon" value="${escapeHtml(t.icon || '')}"></div>
             </div>
         </div>`;
     }).join('');
-    initRings(wrap);
 }
 
-function renderSocials(socials){
-    const wrap = document.getElementById('socialRow');
-    if (!wrap || !Array.isArray(socials)) return;
-    wrap.innerHTML = socials.map(s => `
-        <a class="social-btn" href="${escapeHtml(s.url||'#')}" target="_blank" rel="noopener" aria-label="${escapeHtml(s.label||'link')}">
-            <i class="${escapeHtml(s.icon||'fas fa-link')}"></i>
-        </a>
-    `).join('');
-}
-
-function applyTabConfig(tabs){
-    if (!tabs) return;
-    const rail = document.getElementById('tabRail');
-    if (!rail) return;
-    let anyVisibleActive = false;
-    Object.keys(tabs).forEach(key => {
-        const t = tabs[key] || {};
-        const btn = rail.querySelector(`.tab-btn[data-tab="${key}"]`);
-        const panel = document.getElementById('tab-' + key);
-        if (!btn || !panel) return;
-        const enabled = t.enabled !== false;
-        btn.style.display = enabled ? '' : 'none';
-        panel.dataset.enabled = enabled ? '1' : '0';
-        if (t.label){ const span = btn.querySelector('span'); if (span) span.textContent = t.label; }
-        if (t.icon){ const icon = btn.querySelector('i'); if (icon) icon.className = t.icon; }
-        if (enabled && btn.classList.contains('active')) anyVisibleActive = true;
+function saveTabs() {
+    const tabs = {};
+    PAGE_TAB_DEFS.forEach(def => {
+        tabs[def.key] = {
+            enabled: document.getElementById(`pt-${def.key}-enabled`).checked,
+            label: document.getElementById(`pt-${def.key}-label`).value.trim() || def.key,
+            icon: document.getElementById(`pt-${def.key}-icon`).value.trim() || 'fas fa-circle',
+        };
     });
-    // if the currently-active tab got hidden, jump to the first enabled one
-    if (!anyVisibleActive){
-        const firstEnabled = rail.querySelector('.tab-btn:not([style*="display: none"])');
-        if (firstEnabled) switchTab(firstEnabled.dataset.tab);
-    }
+    saveSection('tabs', tabs, 'pageTabsMsg');
 }
 
-/* ---- CUSTOM TABS & CARDS ------------------------------------------------
-   Fully dashboard-defined extra tabs, each holding its own set of
-   free-form cards ("widgets") — a title, an icon, and a body of text.
-   Rendered alongside the built-in Intel/Vibe/Music tabs. */
-function renderCustomTabs(customTabs){
-    const rail = document.getElementById('tabRail');
-    const panels = document.querySelector('.tab-panels');
-    if (!rail || !panels) return;
+// ---- custom tabs & widgets ----
+function renderCustomTabsList(){
+    const wrap = document.getElementById('customTabsList');
+    const select = document.getElementById('ctTargetTab');
+    if (!wrap || !select) return;
+    const tabs = currentConfig.customTabs || [];
 
-    // clear anything we rendered on a previous config load, keep the built-ins
-    rail.querySelectorAll('.tab-btn[data-custom="1"]').forEach(el => el.remove());
-    panels.querySelectorAll('.tab-panel[data-custom="1"]').forEach(el => el.remove());
+    select.innerHTML = tabs.length
+        ? tabs.map(t => `<option value="${escapeHtml(t.key)}">${escapeHtml(t.label || t.key)}</option>`).join('')
+        : '<option value="">Add a tab first</option>';
 
-    if (!Array.isArray(customTabs) || !customTabs.length) return;
-
-    customTabs.forEach(tab => {
-        if (!tab || !tab.key) return;
-        if (tab.enabled === false) return;
-        const key = String(tab.key).replace(/[^a-z0-9\-]/gi, '');
-        if (!key) return;
-
-        const btn = document.createElement('button');
-        btn.className = 'tab-btn';
-        btn.dataset.tab = key;
-        btn.dataset.custom = '1';
-        btn.onclick = () => switchTab(key);
-        btn.innerHTML = `<i class="${escapeHtml(tab.icon || 'fas fa-star')}"></i> <span>${escapeHtml(tab.label || key)}</span>`;
-        rail.appendChild(btn);
-
-        const panel = document.createElement('div');
-        panel.className = 'tab-panel';
-        panel.id = 'tab-' + key;
-        panel.dataset.custom = '1';
-        const cards = Array.isArray(tab.cards) ? tab.cards : [];
-        panel.innerHTML = cards.map(card => `
-            <div class="panel-card glass">
-                ${card.eyebrow ? `<div class="panel-eyebrow"><i class="${escapeHtml(card.icon || 'fas fa-star')}"></i>${escapeHtml(card.eyebrow)}</div>` : ''}
-                ${card.title ? `<div class="panel-title">${escapeHtml(card.title)}</div>` : ''}
-                ${card.body ? `<p class="about-text">${escapeHtml(card.body).replace(/\n/g, '<br>')}</p>` : ''}
+    wrap.innerHTML = tabs.length ? tabs.map((t, i) => `
+        <div class="item-row" style="align-items:flex-start;flex-direction:column;">
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+                <span style="font-weight:600;"><i class="${escapeHtml(t.icon || 'fas fa-star')}"></i> ${escapeHtml(t.label || t.key)}</span>
+                <div class="actions"><button class="danger" onclick="removeCustomTab(${i})">Remove tab</button></div>
             </div>
-        `).join('') || `<div class="panel-card glass"><p class="about-text">Nothing here yet.</p></div>`;
-        panels.appendChild(panel);
-    });
-}
-
-/* ---- DISCORD WIDGETS ---------------------------------------------------
-   Two optional add-ons beyond the inline status line:
-   1. A richer "profile" card (avatar, name, status, activity) — reuses
-      the same Lanyard data initDiscordStatus() already polls for.
-   2. A "server" widget using Discord's public widget.json endpoint
-      (requires "Server Widget" enabled in the target server's settings). */
-let discordWidgetsCfg = null;
-function initDiscordWidgets(widgetsCfg, discordCfg){
-    discordWidgetsCfg = widgetsCfg || {};
-    const wrap = document.getElementById('discordWidgetsRow');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-
-    if (discordWidgetsCfg.profileEnabled && discordCfg && discordCfg.userId){
-        const card = document.createElement('div');
-        card.className = 'discord-profile-widget';
-        card.id = 'discordProfileWidget';
-        card.innerHTML = `
-            <img class="dpw-avatar" id="dpwAvatar" alt="">
-            <div class="dpw-info">
-                <div class="dpw-name" id="dpwName">—</div>
-                <div class="dpw-status"><span class="status-dot" id="dpwDot"></span><span id="dpwText">offline</span></div>
-            </div>`;
-        wrap.appendChild(card);
-        pollDiscordProfileWidget(discordCfg.userId);
-    }
-
-    if (discordWidgetsCfg.serverEnabled && discordWidgetsCfg.serverId){
-        const card = document.createElement('div');
-        card.className = 'discord-server-widget';
-        card.id = 'discordServerWidget';
-        card.innerHTML = `<div class="dsw-loading">Loading server…</div>`;
-        wrap.appendChild(card);
-        loadDiscordServerWidget(discordWidgetsCfg.serverId, discordWidgetsCfg.inviteUrl);
-    }
-}
-
-let dpwPollTimer = null;
-async function pollDiscordProfileWidget(userId){
-    async function poll(){
-        try{
-            const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
-            const json = await res.json();
-            if (!json.success) return;
-            const d = json.data;
-            const avatarEl = document.getElementById('dpwAvatar');
-            const nameEl = document.getElementById('dpwName');
-            const dotEl = document.getElementById('dpwDot');
-            const textEl = document.getElementById('dpwText');
-            if (!avatarEl) return; // widget was removed by a config reload
-            const user = d.discord_user || {};
-            if (user.id && user.avatar){
-                avatarEl.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
-            }
-            const displayName = user.global_name || user.username || 'Discord user';
-            nameEl.textContent = displayName;
-            const status = d.discord_status || 'offline';
-            dotEl.className = 'status-dot status-' + status;
-            if (d.listening_to_spotify && d.spotify){
-                textEl.textContent = `${d.spotify.song} — ${d.spotify.artist}`;
-            } else if (d.activities && d.activities.find(a => a.type === 0)){
-                textEl.textContent = 'playing ' + d.activities.find(a => a.type === 0).name;
-            } else {
-                textEl.textContent = status;
-            }
-        }catch(e){ /* leave last known state on transient failure */ }
-    }
-    poll();
-    if (dpwPollTimer) clearInterval(dpwPollTimer);
-    dpwPollTimer = setInterval(poll, 20000);
-}
-
-async function loadDiscordServerWidget(serverId, inviteUrl){
-    const card = document.getElementById('discordServerWidget');
-    if (!card) return;
-    try{
-        const res = await fetch(`https://discord.com/api/guilds/${serverId}/widget.json`);
-        if (!res.ok) throw new Error('widget disabled or server not found');
-        const d = await res.json();
-        const online = Array.isArray(d.members) ? d.members.length : (d.presence_count || 0);
-        card.innerHTML = `
-            <div class="dsw-head">
-                ${d.instant_invite ? `<a href="${escapeHtml(inviteUrl || d.instant_invite)}" target="_blank" rel="noopener" class="dsw-name">${escapeHtml(d.name || 'Discord server')}</a>` : `<span class="dsw-name">${escapeHtml(d.name || 'Discord server')}</span>`}
-                <span class="dsw-count"><span class="status-dot status-online"></span>${online} online</span>
-            </div>
-            <div class="dsw-members">${(d.members || []).slice(0, 6).map(m => `<img class="dsw-member-avatar" src="${escapeHtml(m.avatar_url || '')}" alt="" title="${escapeHtml(m.username || '')}">`).join('')}</div>
-        `;
-    }catch(e){
-        card.innerHTML = `<div class="dsw-loading">Server widget unavailable — enable "Server Widget" in Discord server settings.</div>`;
-    }
-}
-
-function applyAppearance(app){
-    const root = document.documentElement.style;
-    const px = (v) => (v || v === 0) ? `${v}px` : null;
-    const map = {
-        avatarSize: px(app && app.avatarSize),
-        nameSize: px(app && app.nameSize),
-        taglineSize: px(app && app.taglineSize),
-        ringSize: px(app && app.ringSize),
-        badgeSize: px(app && app.badgeSize),
-    };
-    root.setProperty('--avatar-size', map.avatarSize || '112px');
-    root.setProperty('--name-size', map.nameSize || 'clamp(1.9rem,5vw,2.5rem)');
-    root.setProperty('--tagline-size', map.taglineSize || '17px');
-    root.setProperty('--ring-size', map.ringSize || '82px');
-    root.setProperty('--badge-size', map.badgeSize || '11px');
-
-    // Card transparency — 0 is fully see-through, 1 is fully opaque.
-    const clamp01 = (v, fallback) => {
-        const n = parseFloat(v);
-        return Number.isFinite(n) ? Math.min(1, Math.max(0, n)) : fallback;
-    };
-    const cardAlpha = clamp01(app && app.cardOpacity, 0.66);
-    const borderAlpha = clamp01(app && app.cardBorderOpacity, 1);
-    root.setProperty('--card-alpha', cardAlpha);
-    root.setProperty('--card-alpha-strong', Math.min(1, cardAlpha * 1.15).toFixed(3));
-    root.setProperty('--card-border-alpha', borderAlpha);
-
-    if (app && app.fontDisplay){
-        root.setProperty('--font-display', `'${app.fontDisplay}', system-ui, sans-serif`);
-    }
-    if (app && app.fontQuote){
-        root.setProperty('--font-quote', `'${app.fontQuote}', Georgia, serif`);
-    }
-    // Dedicated font for the "Click to enter" screen; falls back to its
-    // built-in default if not set in the dashboard.
-    if (app && app.fontEntry){
-        root.setProperty('--font-comic', `'${app.fontEntry}', system-ui, sans-serif`);
-    }
-    if (app && app.entryText) ENTRY_TEXT = app.entryText;
-}
-
-/* ---- CUSTOM FONTS ------------------------------------------------------
-   Fonts uploaded from the dashboard get committed to /public/fonts/ in
-   the repo and registered in config.json under customFonts. We inject
-   an @font-face rule for each one at runtime so they're selectable
-   anywhere a font name is used (display/quote/entry). */
-function applyCustomFonts(fonts){
-    if (!Array.isArray(fonts) || !fonts.length) return;
-    let styleEl = document.getElementById('custom-fonts-style');
-    if (!styleEl){
-        styleEl = document.createElement('style');
-        styleEl.id = 'custom-fonts-style';
-        document.head.appendChild(styleEl);
-    }
-    const formatFor = (ext) => ({ woff2: 'woff2', woff: 'woff', ttf: 'truetype', otf: 'opentype' }[ext] || 'truetype');
-    styleEl.textContent = fonts.map(f => {
-        const src = f.path || f.url; // same-origin path is preferred, cdn url as fallback
-        return `@font-face{ font-family:'${f.name}'; src:url('${src}') format('${formatFor(f.format)}'); font-display:swap; }`;
-    }).join('\n');
-}
-
-function applyRemoteConfig(cfg){
-    if (!cfg) return;
-
-    const theme = cfg.theme || {};
-    const root = document.documentElement.style;
-    if (theme.violet) root.setProperty('--violet', theme.violet);
-    if (theme.violetStrong) root.setProperty('--violet-strong', theme.violetStrong);
-    if (theme.rose) root.setProperty('--rose', theme.rose);
-    if (theme.roseStrong) root.setProperty('--rose-strong', theme.roseStrong);
-
-    const bg = cfg.backgroundVideo || {};
-    BG_VIDEO_SRC = bg.src || '';
-    BG_VIDEO_OPACITY = (typeof bg.opacity === 'number') ? bg.opacity : BG_VIDEO_OPACITY;
-    initBgVideo();
-
-    const id = cfg.identity || {};
-    if (id.name){
-        const h1 = document.getElementById('headerName');
-        if (h1){ h1.textContent = id.name; h1.dataset.text = id.name; }
-        document.title = id.name;
-    }
-    if (id.avatar){
-        const pic = document.getElementById('profilePic');
-        if (pic){
-            pic.onload = () => {
-                pic.style.display = '';
-                if (pic.nextElementSibling) pic.nextElementSibling.style.display = 'none';
-            };
-            pic.onerror = () => {
-                pic.style.display = 'none';
-                if (pic.nextElementSibling) pic.nextElementSibling.style.display = 'flex';
-            };
-            pic.src = id.avatar;
-        }
-    }
-    if (Array.isArray(id.taglines) && id.taglines.length) TAGLINES = id.taglines;
-    applyAvatarFrame(id.frame);
-
-    if (Array.isArray(cfg.songs) && cfg.songs.length) songs = cfg.songs;
-
-    const bio = cfg.bio || {};
-    if (bio.about){
-        const el = document.getElementById('aboutText');
-        if (el) el.textContent = bio.about;
-    }
-    if (Array.isArray(bio.rings)) renderRings(bio.rings);
-    if (bio.location){
-        const chip = document.getElementById('coordChip');
-        if (chip) chip.textContent = bio.location;
-        COORDS = bio.location;
-    }
-    if (bio.birthdayMonth) BDAY_MONTH = parseInt(bio.birthdayMonth, 10) || BDAY_MONTH;
-    if (bio.birthdayDay) BDAY_DAY = parseInt(bio.birthdayDay, 10) || BDAY_DAY;
-    if (bio.birthdayLabel){
-        const el = document.getElementById('bdaySub');
-        if (el) el.textContent = bio.birthdayLabel;
-    }
-    if (bio.timezone) MY_TIMEZONE = bio.timezone;
-    if (bio.lastfmUser) LFM_USER = bio.lastfmUser;
-
-    renderSocials(cfg.socials);
-    applyTabConfig(cfg.tabs);
-    renderCustomTabs(cfg.customTabs);
-    applyCustomFonts(cfg.customFonts);
-    applyAppearance(cfg.appearance);
-
-    renderBadges(cfg.badges);
-    initDiscordStatus(cfg.discord);
-    initDiscordWidgets(cfg.discordWidgets, cfg.discord);
-
-    const fx = cfg.effects || {};
-    initViewCounter(fx.viewCounter !== false);
-    initScrollReveal(fx.scrollReveal !== false);
-}
-
-async function loadSiteConfig(){
-    let cfg = null;
-    try{
-        const res = await fetch('/api/public-config', { cache: 'no-store' });
-        if (res.ok) cfg = await res.json();
-    }catch(e){ /* config.json missing or unreachable — site still works on defaults */ }
-
-    applyRemoteConfig(cfg);
-
-    // things that read TAGLINES/songs/LFM_USER/bio/ENTRY_TEXT need to run *after* config is applied
-    typewriterLoop(document.getElementById('taglineText'), TAGLINES);
-    typewriterLoop(document.getElementById('entryComicText'), [ENTRY_TEXT]);
-    fetchNowPlaying(); fetchRecent(); fetchTopArtists();
-    initBirthday();
-}
-loadSiteConfig();
-
-/* =====================================================================
-   LIVING SKY — time-of-day automation
-   ===================================================================== */
-function timeSlot(hour){
-    if (hour >= 5  && hour < 11) return 'dawn';
-    if (hour >= 11 && hour < 17) return 'day';
-    if (hour >= 17 && hour < 21) return 'dusk';
-    return 'night';
-}
-const GREETINGS = {
-    dawn:  ['good morning ☀️', 'up early?'],
-    day:   ['hey there', 'hello!'],
-    dusk:  ['good evening 🌇', 'golden hour'],
-    night: ['still up, huh?', 'night owl hours 🌙']
-};
-const SUN_ICON = { dawn:'fa-cloud-sun', day:'fa-sun', dusk:'fa-cloud-moon', night:'fa-moon' };
-
-function applySkyTheme(){
-    const now = new Date();
-    const slot = timeSlot(now.getHours());
-    document.body.className = 'sky-' + slot;
-
-    const greetArr = GREETINGS[slot];
-    const greeting = greetArr[Math.floor(Math.random() * greetArr.length)];
-    document.getElementById('greetingText').textContent = greeting;
-
-    const icon = document.querySelector('.greeting-eyebrow i');
-    if (icon) icon.className = 'fas ' + SUN_ICON[slot];
-}
-applySkyTheme();
-setInterval(applySkyTheme, 5 * 60 * 1000);
-
-function updateClocks(){
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:false });
-    let theirStr = '--:--';
-    try{
-        theirStr = now.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', hour12:false, timeZone: MY_TIMEZONE });
-    }catch(e){}
-
-    const localVal = document.getElementById('localTimeVal');
-    if (localVal) localVal.textContent = timeStr;
-
-    const theirVal = document.getElementById('theirTimeVal');
-    if (theirVal) theirVal.textContent = theirStr;
-
-    const vClock = document.getElementById('vibeClock');
-    if (vClock) vClock.textContent = timeStr;
-}
-updateClocks();
-setInterval(updateClocks, 15000);
-
-/* =====================================================================
-   COPY COORDINATES
-   ===================================================================== */
-function showToast(msg){
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => toast.classList.remove('show'), 2400);
-}
-function copyCoords(){
-    if (navigator.clipboard){
-        navigator.clipboard.writeText(COORDS).then(() => showToast('copied coordinates ✔')).catch(() => showToast('couldn\u2019t copy coordinates'));
-    } else {
-        showToast(COORDS);
-    }
-}
-
-/* =====================================================================
-   SESSION TIMER
-   ===================================================================== */
-const sessionStart = Date.now();
-function updateSessionTimer(){
-    const secs = Math.floor((Date.now() - sessionStart) / 1000);
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
-    const el = document.getElementById('sessionTimer');
-    if (el) el.textContent = m + ':' + String(s).padStart(2, '0');
-}
-setInterval(updateSessionTimer, 1000);
-
-/* =====================================================================
-   TAB SWITCHING (with keyboard shortcuts 1/2/3)
-   ===================================================================== */
-function switchTab(tab){
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
-    document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.toggle('active', panel.id === 'tab-' + tab));
-    if (tab === 'intel') initRings(document.getElementById('statRings'));
-}
-document.addEventListener('keydown', e => {
-    const tag = document.activeElement && document.activeElement.tagName;
-    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-    const map = { '1':'intel', '2':'vibe', '3':'music' };
-    if (map[e.key]) switchTab(map[e.key]);
-});
-
-/* =====================================================================
-   STAT RINGS
-   ===================================================================== */
-function initRings(container){
-    if (!container) return;
-    container.querySelectorAll('.ring-fill').forEach(circle => {
-        const pct = parseFloat(circle.dataset.pct) || 0;
-        const r = parseFloat(circle.getAttribute('r'));
-        const c = 2 * Math.PI * r;
-        circle.style.strokeDasharray = c;
-        circle.style.strokeDashoffset = c;
-        requestAnimationFrame(() => {
-            circle.style.transition = REDUCED_MOTION ? 'none' : 'stroke-dashoffset 1.3s cubic-bezier(.16,.84,.44,1)';
-            circle.style.strokeDashoffset = c * (1 - pct / 100);
-        });
-    });
-}
-initRings(document.getElementById('statRings'));
-
-/* =====================================================================
-   BIRTHDAY / ZODIAC — live day:hour:minute countdown
-   ===================================================================== */
-function nextBirthdayDetail(month, day){
-    const now = new Date();
-    let target = new Date(now.getFullYear(), month - 1, day);
-    if (target < new Date(now.getFullYear(), now.getMonth(), now.getDate())) target = new Date(now.getFullYear() + 1, month - 1, day);
-    const prev = new Date(target.getFullYear() - 1, month - 1, day);
-    const total = target - prev;
-    const elapsed = now - prev;
-    const diffMs = target - now;
-    const days = Math.floor(diffMs / 86400000);
-    const hours = Math.floor((diffMs % 86400000) / 3600000);
-    const mins = Math.floor((diffMs % 3600000) / 60000);
-    return { days, hours, mins, pct: Math.max(0, Math.min(100, (elapsed / total) * 100)) };
-}
-function initBirthday(){
-    const info = nextBirthdayDetail(BDAY_MONTH, BDAY_DAY);
-    const daysEl = document.getElementById('bdayDays');
-    if (info.days === 0 && info.hours === 0 && info.mins <= 0){
-        daysEl.textContent = "🎉 it's today!!";
-    } else {
-        daysEl.textContent = `${info.days}d ${info.hours}h ${info.mins}m until my birthday`;
-    }
-    const ring = document.getElementById('bdayRing');
-    ring.dataset.pct = info.pct.toFixed(2);
-    initRings(ring.closest('.bday-ring-wrap').parentElement.parentElement);
-}
-setInterval(initBirthday, 60000);
-
-/* =====================================================================
-   VIBE MOOD ROTATOR
-   ===================================================================== */
-const vsnStates = [
-    { emoji:'🎧', tag:'chill mode',  caption:'lost in a random eurodance playlist',            fix:'eurodance songs',       into:'one more coffee ☕' },
-    { emoji:'🌙', tag:'night owl',   caption:'awake way past my schedule again',   fix:'lo-fi + rain sounds 🌧️', into:'doom-scrolling reels 📱' },
-    { emoji:'⚡', tag:'locked in',   caption:'yea no 🥲',                    fix:'romcom animes ❤️‍🩹',      into:'finishing one more episode' },
-    { emoji:'🍃', tag:'soft',        caption:'in a nostalgic kind of mood',                fix:'Clannad feels',        into:'rainy day naps' }
-];
-let vsnIdx = 0;
-function showVSN(i){
-    vsnIdx = i;
-    const s = vsnStates[i];
-    const ids = ['vsnEmoji','vsnMoodTag','vsnCaption','vsnFix','vsnInto'];
-    const vals = [s.emoji, s.tag, s.caption, s.fix, s.into];
-    ids.forEach((id, idx) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.style.transition = 'opacity .35s ease';
-        el.style.opacity = '0';
-        setTimeout(() => { el.textContent = vals[idx]; el.style.opacity = '1'; }, 220);
-    });
-}
-showVSN(0);
-setInterval(() => showVSN((vsnIdx + 1) % vsnStates.length), 6000);
-
-/* =====================================================================
-   LAST.FM — now playing / recent / top artists
-   ===================================================================== */
-function timeAgo(unixSeconds){
-    const diff = Math.max(0, Date.now() / 1000 - unixSeconds);
-    if (diff < 60) return 'just now';
-    if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-    return Math.floor(diff / 86400) + 'd ago';
-}
-
-async function fetchNowPlaying(){
-    try{
-        const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LFM_USER}&api_key=${LFM_KEY}&format=json&limit=1`);
-        const data = await res.json();
-        const track = data?.recenttracks?.track?.[0];
-        if (!track) throw new Error('no track');
-
-        const isLive = track['@attr']?.nowplaying === 'true';
-        const name = track.name || 'Unknown Track';
-        const artist = track.artist?.['#text'] || 'Unknown Artist';
-        const art = (track.image?.find(i => i.size === 'large')?.['#text'] || '').trim() || LFM_DEFAULT_ART;
-
-        document.getElementById('lfm-track').textContent = name;
-        document.getElementById('lfm-artist').textContent = artist;
-        document.getElementById('lfm-art').src = art;
-        document.getElementById('lfm-status').textContent = isLive ? '▶ live scrobbling' : '◉ offline · last played';
-
-        document.getElementById('lfm-art').classList.toggle('spinning', isLive);
-        document.getElementById('lfm-eq').classList.toggle('active', isLive);
-
-        const vnp = document.getElementById('vibeNowPlaying');
-        if (vnp) vnp.innerHTML = '<i class="fas fa-music"></i> ' + (isLive ? 'listening to ' : 'last played ') + '<strong>' + name + '</strong> — ' + artist;
-    }catch(err){
-        document.getElementById('lfm-track').textContent = 'connection lost';
-        document.getElementById('lfm-artist').textContent = '';
-        document.getElementById('lfm-status').textContent = 'couldn\u2019t reach last.fm';
-        const vnp = document.getElementById('vibeNowPlaying');
-        if (vnp) vnp.innerHTML = '<i class="fas fa-music"></i> couldn\u2019t check what I\u2019m listening to';
-    }
-}
-
-async function fetchRecent(){
-    const list = document.getElementById('recentList');
-    if (!list) return;
-    try{
-        const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LFM_USER}&api_key=${LFM_KEY}&format=json&limit=6`);
-        const data = await res.json();
-        const tracks = (data?.recenttracks?.track || []).filter(t => t['@attr']?.nowplaying !== 'true').slice(0, 5);
-        if (!tracks.length){ list.innerHTML = '<p style="font-size:12px;color:var(--ink-faint);">nothing scrobbled recently.</p>'; return; }
-        list.innerHTML = tracks.map(t => {
-            const art = (t.image?.find(i => i.size === 'medium')?.['#text'] || '').trim() || LFM_DEFAULT_ART;
-            const when = t.date?.uts ? timeAgo(t.date.uts) : '';
-            return `<div class="recent-row">
-                <img class="recent-art" src="${art}" alt="" loading="lazy">
-                <div class="recent-text">
-                    <div class="recent-track">${escapeHtml(t.name || 'Unknown')}</div>
-                    <div class="recent-artist">${escapeHtml(t.artist?.['#text'] || 'Unknown Artist')}</div>
+            ${(t.cards || []).map((c, ci) => `
+                <div class="item-row" style="margin-left:12px;width:calc(100% - 12px);background:var(--panel);">
+                    <span>${escapeHtml(c.title || c.eyebrow || 'Untitled card')}</span>
+                    <div class="actions"><button class="danger" onclick="removeCustomCard(${i}, ${ci})">Remove</button></div>
                 </div>
-                <div class="recent-time">${when}</div>
-            </div>`;
-        }).join('');
-    }catch(err){
-        list.innerHTML = '<p style="font-size:12px;color:var(--ink-faint);">couldn\u2019t load recent tracks.</p>';
-    }
-}
-
-async function fetchTopArtists(){
-    const wrap = document.getElementById('topArtists');
-    if (!wrap) return;
-    try{
-        const res = await fetch(`https://ws.audioscrobbler.com/2.0/?method=user.gettopartists&user=${LFM_USER}&api_key=${LFM_KEY}&format=json&period=7day&limit=5`);
-        const data = await res.json();
-        const artists = data?.topartists?.artist || [];
-        if (!artists.length){ wrap.innerHTML = '<p style="font-size:12px;color:var(--ink-faint);">not enough scrobbles yet this week.</p>'; return; }
-        wrap.innerHTML = artists.map((a, i) => `<span class="artist-chip"><span class="rank">#${i+1}</span> ${escapeHtml(a.name)}</span>`).join('');
-    }catch(err){
-        wrap.innerHTML = '<p style="font-size:12px;color:var(--ink-faint);">couldn\u2019t load this week\u2019s rotation.</p>';
-    }
-}
-
-function escapeHtml(str){
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
-
-setInterval(fetchNowPlaying, 30000);
-setInterval(fetchRecent, 60000);
-
-/* =====================================================================
-   MP3 PLAYER (Cloudinary) — with playlist queue, like, speed, MediaSession
-   ===================================================================== */
-const audioEl = document.getElementById('audioEl');
-let curIdx = 0, isShuffle = false, isRepeat = false, isLiked = false;
-const SPEEDS = [1, 1.25, 1.5, 0.75];
-let speedIdx = 0;
-
-function initPlayer(){
-    const ui = document.getElementById('playerUI');
-    const empty = document.getElementById('playerEmpty');
-    if (!songs.length){ ui.style.display = 'none'; empty.style.display = 'block'; return; }
-    ui.style.display = 'flex'; empty.style.display = 'none';
-    renderPlaylist();
-    loadTrack(randomTrackIndex(), true);
-}
-
-function renderPlaylist(){
-    const wrap = document.getElementById('playlistQueue');
-    if (!wrap) return;
-    wrap.innerHTML = songs.map((s, i) => `
-        <div class="pq-row${i === curIdx ? ' active' : ''}" onclick="loadTrack(${i}, true)">
-            <span class="pq-index">${i === curIdx ? '<i class=\"fas fa-play pq-playing-icon\"></i>' : (i + 1)}</span>
-            <div class="pq-text">
-                <div class="pq-title">${escapeHtml(s.title || 'Untitled')}</div>
-                <div class="pq-artist">${escapeHtml(s.artist || '')}</div>
-            </div>
+            `).join('') || '<p class="sub" style="margin:6px 0 0 12px;">No cards in this tab yet.</p>'}
         </div>
-    `).join('');
+    `).join('') : '<p class="sub">No custom tabs yet — add one below.</p>';
 }
 
-function loadTrack(i, autoplay){
-    curIdx = ((i % songs.length) + songs.length) % songs.length;
-    const s = songs[curIdx];
-    audioEl.src = cldAudio(s.id);
-    audioEl.playbackRate = SPEEDS[speedIdx];
-    document.getElementById('playerTitle').textContent = s.title || 'Untitled';
-    document.getElementById('playerArtist').textContent = s.artist || '';
-    document.getElementById('playerIndex').textContent = (curIdx + 1) + ' / ' + songs.length;
-
-    const cover = document.getElementById('playerCover');
-    const fallback = document.getElementById('playerCoverFallback');
-    let coverUrl = '';
-    if (s.cover){ coverUrl = cldImage(s.cover); cover.src = coverUrl; cover.style.display = 'block'; fallback.style.display = 'none'; }
-    else { cover.style.display = 'none'; fallback.style.display = 'flex'; }
-
-    renderPlaylist();
-
-    if ('mediaSession' in navigator){
-        navigator.mediaSession.metadata = new MediaMetadata({
-            title: s.title || 'Untitled',
-            artist: s.artist || '',
-            artwork: coverUrl ? [{ src: coverUrl, sizes: '512x512', type: 'image/jpeg' }] : []
-        });
-    }
-
-    if (autoplay) audioEl.play().then(() => setPlayerState(true)).catch(() => setPlayerState(false));
-    else setPlayerState(false);
-}
-
-function setPlayerState(playing){
-    const btn = document.getElementById('playBtn');
-    btn.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
-    document.getElementById('playerEq').classList.toggle('active', playing);
-    document.getElementById('playerCoverWrap').classList.toggle('is-playing', playing);
-}
-
-function playerToggle(){
-    if (!songs.length) return;
-    if (audioEl.paused) audioEl.play().then(() => setPlayerState(true)).catch(() => {});
-    else { audioEl.pause(); setPlayerState(false); }
-}
-function playerNext(){
-    if (!songs.length) return;
-    const wasPlaying = !audioEl.paused;
-    const next = isShuffle ? Math.floor(Math.random() * songs.length) : curIdx + 1;
-    loadTrack(next, wasPlaying);
-}
-function playerPrev(){
-    if (!songs.length) return;
-    const wasPlaying = !audioEl.paused;
-    loadTrack(curIdx - 1, wasPlaying);
-}
-function playerShuffleToggle(){
-    isShuffle = !isShuffle;
-    document.getElementById('shuffleBtn').classList.toggle('active-toggle', isShuffle);
-    showToast(isShuffle ? 'shuffle on' : 'shuffle off');
-}
-function playerRepeatToggle(){
-    isRepeat = !isRepeat;
-    document.getElementById('repeatBtn').classList.toggle('active-toggle', isRepeat);
-    showToast(isRepeat ? 'repeat on' : 'repeat off');
-}
-function playerLikeToggle(){
-    isLiked = !isLiked;
-    const btn = document.getElementById('likeBtn');
-    btn.classList.toggle('liked', isLiked);
-    btn.innerHTML = isLiked ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
-    showToast(isLiked ? 'added to favorites ✔' : 'removed from favorites');
-}
-function playerSpeedCycle(){
-    speedIdx = (speedIdx + 1) % SPEEDS.length;
-    audioEl.playbackRate = SPEEDS[speedIdx];
-    document.getElementById('speedBtn').textContent = SPEEDS[speedIdx] + 'x';
-    showToast('speed ' + SPEEDS[speedIdx] + 'x');
-}
-function formatTime(sec){
-    if (!isFinite(sec)) return '0:00';
-    const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
-    return m + ':' + String(s).padStart(2, '0');
-}
-audioEl.addEventListener('timeupdate', () => {
-    const pct = audioEl.duration ? (audioEl.currentTime / audioEl.duration) * 100 : 0;
-    document.getElementById('progFill').style.width = pct + '%';
-    document.getElementById('curTime').textContent = formatTime(audioEl.currentTime);
-});
-audioEl.addEventListener('loadedmetadata', () => {
-    document.getElementById('durTime').textContent = formatTime(audioEl.duration);
-});
-audioEl.addEventListener('ended', () => {
-    if (isRepeat){ audioEl.currentTime = 0; audioEl.play(); }
-    else playerNext();
-});
-document.getElementById('progWrap').addEventListener('click', e => {
-    if (!audioEl.duration) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    audioEl.currentTime = ((e.clientX - r.left) / r.width) * audioEl.duration;
-});
-document.getElementById('volSlider').addEventListener('input', e => { audioEl.volume = e.target.value / 100; });
-audioEl.volume = 0.7;
-if ('mediaSession' in navigator){
-    navigator.mediaSession.setActionHandler('play', () => playerToggle());
-    navigator.mediaSession.setActionHandler('pause', () => playerToggle());
-    navigator.mediaSession.setActionHandler('previoustrack', () => playerPrev());
-    navigator.mediaSession.setActionHandler('nexttrack', () => playerNext());
-}
-initPlayer();
-
-/* =====================================================================
-   CLICK RIPPLE
-   ===================================================================== */
-let rippleToggle = false;
-document.addEventListener('click', e => {
-    if (REDUCED_MOTION) return;
-    const r = document.createElement('div');
-    r.className = 'ripple-burst' + (rippleToggle ? ' alt' : '');
-    rippleToggle = !rippleToggle;
-    r.style.left = e.clientX + 'px';
-    r.style.top = e.clientY + 'px';
-    document.body.appendChild(r);
-    setTimeout(() => r.remove(), 600);
-});
-
-/* =====================================================================
-   KONAMI EASTER EGG
-   ===================================================================== */
-const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-const FUN_FACTS = [
-    'Im actually in despair',
-    'am scared...',
-    'i dont know what to do anymore'
-];
-let konamiIdx = 0;
-document.addEventListener('keydown', e => {
-    konamiIdx = (e.key === KONAMI[konamiIdx]) ? konamiIdx + 1 : (e.key === KONAMI[0] ? 1 : 0);
-    if (konamiIdx === KONAMI.length){
-        konamiIdx = 0;
-        document.getElementById('kfFact').textContent = FUN_FACTS[Math.floor(Math.random() * FUN_FACTS.length)];
-        document.getElementById('konami-flash').classList.add('active');
-    }
-});
-function closeKonami(){ document.getElementById('konami-flash').classList.remove('active'); }
-
-/* =====================================================================
-   CUSTOM CURSOR (desktop only)
-   ===================================================================== */
-(function(){
-    const isFine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (!isFine) return;
-    const dot = document.getElementById('cursor-dot');
-    const ring = document.getElementById('cursor-ring');
-    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-    let ringX = mouseX, ringY = mouseY;
-    let seen = false;
-
-    document.addEventListener('mousemove', e => {
-        mouseX = e.clientX; mouseY = e.clientY;
-        dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
-        if (!seen){ seen = true; ringX = mouseX; ringY = mouseY; }
+function addCustomTab(){
+    const label = document.getElementById('ctName').value.trim();
+    const icon = document.getElementById('ctIcon').value.trim() || 'fas fa-star';
+    const msg = document.getElementById('customTabsMsg');
+    if (!label) { msg.textContent = 'Give the tab a name.'; msg.className = 'msg err'; return; }
+    const key = label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || ('tab' + Date.now());
+    const tabs = [...(currentConfig.customTabs || [])];
+    if (tabs.some(t => t.key === key)) { msg.textContent = 'A tab with a similar name already exists.'; msg.className = 'msg err'; return; }
+    tabs.push({ key, label, icon, enabled: true, cards: [] });
+    saveSection('customTabs', tabs, 'customTabsMsg').then(() => {
+        document.getElementById('ctName').value = '';
+        document.getElementById('ctIcon').value = '';
     });
-    document.addEventListener('mousedown', () => { dot.classList.add('clicked'); ring.classList.add('clicked'); });
-    document.addEventListener('mouseup', () => { dot.classList.remove('clicked'); ring.classList.remove('clicked'); });
-    const hoverTargets = 'a, button, .tab-btn, .social-btn, .badge-feature, .tag-chip, .glass, .pq-row';
-    document.addEventListener('mouseover', e => { if (e.target.closest(hoverTargets)){ dot.classList.add('hovering'); ring.classList.add('hovering'); } });
-    document.addEventListener('mouseout', e => { if (e.target.closest(hoverTargets)){ dot.classList.remove('hovering'); ring.classList.remove('hovering'); } });
+}
 
-    function tick(){
-        ringX += (mouseX - ringX) * 0.18;
-        ringY += (mouseY - ringY) * 0.18;
-        ring.style.left = ringX + 'px';
-        ring.style.top = ringY + 'px';
-        requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-})();
+function removeCustomTab(index){
+    const tabs = (currentConfig.customTabs || []).filter((_, i) => i !== index);
+    saveSection('customTabs', tabs, 'customTabsMsg');
+}
 
-/* =====================================================================
-   AMBIENT BACKGROUND — twinkling stars + slow drifting aurora glow
-   (replaces the old rotating sunbeams / drifting clouds)
-   ===================================================================== */
-(function(){
-    const canvas = document.getElementById('ambient-canvas');
-    if (!canvas || REDUCED_MOTION) return;
-    const ctx = canvas.getContext('2d');
-    let w, h, stars = [], blobs = [], running = true;
-
-    function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-    function makeStars(){
-        const count = Math.min(150, Math.floor((w * h) / 9000));
-        stars = Array.from({ length: count }, () => ({
-            x: Math.random() * w,
-            y: Math.random() * h * 0.8,
-            r: 0.6 + Math.random() * 1.3,
-            phase: Math.random() * Math.PI * 2,
-            speed: 0.5 + Math.random() * 1.1,
-            base: 0.2 + Math.random() * 0.5
-        }));
-    }
-    function makeBlobs(){
-        blobs = [
-            { x:.20, y:.24, r:.48, color:'91,42,158', t:0 },
-            { x:.78, y:.62, r:.40, color:'46,24,84', t:2.1 },
-            { x:.50, y:.12, r:.34, color:'143,178,216', t:4.3 }
-        ];
-    }
-    function draw(t){
-        ctx.clearRect(0, 0, w, h);
-        ctx.globalCompositeOperation = 'lighter';
-        blobs.forEach(b => {
-            const bx = (b.x + Math.sin(t * 0.00008 + b.t) * 0.09) * w;
-            const by = (b.y + Math.cos(t * 0.00006 + b.t) * 0.07) * h;
-            const rad = b.r * Math.max(w, h);
-            const g = ctx.createRadialGradient(bx, by, 0, bx, by, rad);
-            g.addColorStop(0, `rgba(${b.color},0.10)`);
-            g.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = g;
-            ctx.beginPath(); ctx.arc(bx, by, rad, 0, Math.PI * 2); ctx.fill();
-        });
-        ctx.globalCompositeOperation = 'source-over';
-        stars.forEach(s => {
-            const a = s.base + Math.sin(t * 0.001 * s.speed + s.phase) * 0.25;
-            ctx.globalAlpha = Math.max(0, a);
-            ctx.fillStyle = '#EDEFF9';
-            ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
-        });
-        ctx.globalAlpha = 1;
-        if (running) requestAnimationFrame(draw);
-    }
-    resize(); makeStars(); makeBlobs();
-    window.addEventListener('resize', () => { resize(); makeStars(); });
-    document.addEventListener('visibilitychange', () => {
-        running = !document.hidden;
-        if (running) requestAnimationFrame(draw);
+function addCustomCard(){
+    const targetKey = document.getElementById('ctTargetTab').value;
+    const eyebrow = document.getElementById('ctCardEyebrow').value.trim();
+    const title = document.getElementById('ctCardTitle').value.trim();
+    const body = document.getElementById('ctCardBody').value.trim();
+    const msg = document.getElementById('customTabsMsg');
+    if (!targetKey) { msg.textContent = 'Add a custom tab first.'; msg.className = 'msg err'; return; }
+    if (!title && !body) { msg.textContent = 'Give the card a title or some body text.'; msg.className = 'msg err'; return; }
+    const tabs = (currentConfig.customTabs || []).map(t => {
+        if (t.key !== targetKey) return t;
+        return { ...t, cards: [...(t.cards || []), { eyebrow, title, body }] };
     });
-    requestAnimationFrame(draw);
-})();
-
-/* =====================================================================
-   SNOW — layered, swaying, glowing (replaces the old falling rain)
-   ===================================================================== */
-const snowLevels = [0.7, 1, 1.7];
-const snowLevelIdx = 1; // fixed at 'snowfall' — no on-screen toggle anymore
-
-(function(){
-    const canvas = document.getElementById('motes-canvas');
-    const ctx = canvas.getContext('2d');
-    let w, h, particles = [];
-    let running = !REDUCED_MOTION;
-
-    function resize(){
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-    }
-    function makeParticles(){
-        const base = Math.min(130, Math.floor((w * h) / 13000));
-        const count = Math.floor(base * snowLevels[snowLevelIdx]);
-        particles = Array.from({ length: count }, () => {
-            const depth = Math.random();
-            return {
-                x: Math.random() * w,
-                y: Math.random() * h,
-                r: 1 + depth * 2.6,
-                speed: 0.4 + depth * 1.3,
-                sway: 0.4 + Math.random() * 0.9,
-                phase: Math.random() * Math.PI * 2,
-                alpha: 0.15 + depth * 0.55,
-                depth
-            };
-        });
-    }
-    window._rebuildSnow = makeParticles;
-    function draw(){
-        ctx.clearRect(0, 0, w, h);
-        particles.forEach(p => {
-            p.y += p.speed;
-            p.phase += 0.012;
-            const x = p.x + Math.sin(p.phase) * p.sway * 6;
-            ctx.globalAlpha = p.alpha;
-            ctx.fillStyle = '#F3F6FF';
-            ctx.shadowColor = 'rgba(210,220,255,0.55)';
-            ctx.shadowBlur = p.depth * 4;
-            ctx.beginPath();
-            ctx.arc(x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fill();
-            if (p.y > h + 10){ p.y = -10; p.x = Math.random() * w; }
-        });
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
-        if (running) requestAnimationFrame(draw);
-    }
-    resize(); makeParticles();
-    window.addEventListener('resize', () => { resize(); makeParticles(); });
-    document.addEventListener('visibilitychange', () => {
-        running = !document.hidden && !REDUCED_MOTION;
-        if (running) requestAnimationFrame(draw);
+    saveSection('customTabs', tabs, 'customTabsMsg').then(() => {
+        document.getElementById('ctCardEyebrow').value = '';
+        document.getElementById('ctCardTitle').value = '';
+        document.getElementById('ctCardBody').value = '';
     });
-    if (running) requestAnimationFrame(draw); else draw();
+}
+
+function removeCustomCard(tabIndex, cardIndex){
+    const tabs = (currentConfig.customTabs || []).map((t, i) => {
+        if (i !== tabIndex) return t;
+        return { ...t, cards: (t.cards || []).filter((_, ci) => ci !== cardIndex) };
+    });
+    saveSection('customTabs', tabs, 'customTabsMsg');
+}
+
+function saveBio() {
+    saveSection('bio', {
+        about: document.getElementById('bioAbout').value.trim(),
+        rings: (currentConfig.bio && currentConfig.bio.rings) || [],
+        location: document.getElementById('bioLocation').value.trim(),
+        birthdayMonth: parseInt(document.getElementById('bioBdayMonth').value, 10) || 1,
+        birthdayDay: parseInt(document.getElementById('bioBdayDay').value, 10) || 1,
+        birthdayLabel: document.getElementById('bioBdayLabel').value.trim(),
+        timezone: document.getElementById('bioTimezone').value.trim(),
+        lastfmUser: document.getElementById('bioLastfm').value.trim(),
+    }, 'bioMsg');
+}
+function escapeHtml(s) { return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+// ---- save handlers ----
+async function saveSection(section, data, msgId) {
+    const msg = document.getElementById(msgId);
+    msg.textContent = 'Saving...'; msg.className = 'msg';
+    try {
+        const res = await fetch('/api/config', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ section, data })
+        });
+        const updated = await res.json();
+        if (!res.ok) throw new Error(updated.error || 'Save failed');
+        currentConfig = updated;
+        msg.textContent = 'Saved. Site updates in a minute or two.'; msg.className = 'msg ok';
+        renderSongs();
+        renderBadges();
+        if (document.getElementById('customTabsList')) renderCustomTabsList();
+        if (document.getElementById('customFontsList')) { renderCustomFontsList(); populateFontSelects(); }
+    } catch (e) {
+        msg.textContent = e.message; msg.className = 'msg err';
+    }
+}
+
+function saveTheme() {
+    saveSection('theme', {
+        violet: document.getElementById('violetHex').value,
+        violetStrong: document.getElementById('violetStrongHex').value,
+        rose: document.getElementById('roseHex').value,
+        roseStrong: document.getElementById('roseStrongHex').value,
+    }, 'themeMsg');
+}
+
+function saveVideo() {
+    saveSection('backgroundVideo', {
+        src: document.getElementById('videoUrl').value.trim(),
+        opacity: parseFloat(document.getElementById('videoOpacity').value) || 0.55,
+    }, 'videoMsg');
+}
+
+function saveIdentity() {
+    const taglines = document.getElementById('idTaglines').value
+        .split('\n').map(s => s.trim()).filter(Boolean);
+    saveSection('identity', {
+        name: document.getElementById('idName').value.trim(),
+        taglines,
+        avatar: document.getElementById('idAvatar').value.trim(),
+        frame: document.getElementById('idFrame').value,
+    }, 'identityMsg');
+}
+
+// ---- direct uploads (Cloudinary, unsigned) ----
+// XHR (not fetch) so we can report upload progress — useful for video
+// files especially, where a silent multi-minute wait looks like it's
+// "not working" when it's actually just uploading.
+function uploadToCloudinary(file, resourceType, onProgress) {
+    return new Promise((resolve, reject) => {
+        const up = currentConfig.uploads || {};
+        if (!up.cloudName || !up.uploadPreset) {
+            reject(new Error('Set your cloud name + upload preset in the Uploads tab first.'));
+            return;
+        }
+        const form = new FormData();
+        form.append('file', file);
+        form.append('upload_preset', up.uploadPreset);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `https://api.cloudinary.com/v1_1/${up.cloudName}/${resourceType}/upload`);
+        if (onProgress){
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
+            });
+        }
+        xhr.onload = () => {
+            let data;
+            try { data = JSON.parse(xhr.responseText); } catch { data = {}; }
+            if (xhr.status >= 200 && xhr.status < 300){
+                resolve(data.secure_url);
+            } else {
+                reject(new Error((data.error && data.error.message) || `Upload failed (HTTP ${xhr.status}). Check the preset allows this file type/size, and that Signing Mode is Unsigned.`));
+            }
+        };
+        xhr.onerror = () => reject(new Error('Network error while uploading — check your connection and try again.'));
+        xhr.send(form);
+    });
+}
+
+async function uploadAvatar() {
+    const f = document.getElementById('idAvatarFile').files[0];
+    const msg = document.getElementById('identityMsg');
+    if (!f) { msg.textContent = 'Choose a photo first.'; msg.className = 'msg err'; return; }
+    msg.textContent = 'Uploading...'; msg.className = 'msg';
+    try {
+        const url = await uploadToCloudinary(f, 'image');
+        document.getElementById('idAvatar').value = url;
+        msg.textContent = 'Uploaded — click Save identity to publish it.'; msg.className = 'msg ok';
+    } catch (e) {
+        msg.textContent = e.message; msg.className = 'msg err';
+    }
+}
+
+async function uploadVideoFile() {
+    const f = document.getElementById('videoFile').files[0];
+    const msg = document.getElementById('videoMsg');
+    const track = document.getElementById('videoProgressTrack');
+    const fill = document.getElementById('videoProgressFill');
+    if (!f) { msg.textContent = 'Choose a video first.'; msg.className = 'msg err'; return; }
+    msg.textContent = 'Uploading... 0%'; msg.className = 'msg';
+    track.style.display = 'block'; fill.style.width = '0%';
+    try {
+        const url = await uploadToCloudinary(f, 'video', (pct) => {
+            fill.style.width = pct + '%';
+            msg.textContent = `Uploading... ${pct}%`;
+        });
+        document.getElementById('videoUrl').value = url;
+        msg.textContent = 'Uploaded — click Save background video to publish it.'; msg.className = 'msg ok';
+    } catch (e) {
+        msg.textContent = e.message; msg.className = 'msg err';
+    } finally {
+        track.style.display = 'none';
+    }
+}
+
+function saveUploads() {
+    saveSection('uploads', {
+        cloudName: document.getElementById('cloudName').value.trim(),
+        uploadPreset: document.getElementById('uploadPreset').value.trim(),
+    }, 'uploadsMsg');
+}
+
+// ---- font upload: reads the file as base64 and commits it via /api/upload-font ----
+function readFileAsBase64(file){
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1] || '');
+        reader.onerror = () => reject(new Error('Could not read that file.'));
+        reader.readAsDataURL(file);
+    });
+}
+
+async function uploadFont(){
+    const fontFamily = document.getElementById('fontName').value.trim();
+    const file = document.getElementById('fontFile').files[0];
+    const msg = document.getElementById('fontsMsg');
+    const track = document.getElementById('fontProgressTrack');
+    const fill = document.getElementById('fontProgressFill');
+
+    if (!fontFamily) { msg.textContent = 'Give the font a name first.'; msg.className = 'msg err'; return; }
+    if (!file) { msg.textContent = 'Choose a font file first.'; msg.className = 'msg err'; return; }
+    if (file.size > 4 * 1024 * 1024) { msg.textContent = 'That file is over 4MB — the dashboard\'s upload limit. Try a .woff2 (usually much smaller).'; msg.className = 'msg err'; return; }
+
+    msg.textContent = 'Reading file...'; msg.className = 'msg';
+    track.style.display = 'block'; fill.style.width = '30%';
+    try {
+        const dataBase64 = await readFileAsBase64(file);
+        fill.style.width = '70%';
+        msg.textContent = 'Uploading to your repo...'; msg.className = 'msg';
+        const res = await fetch('/api/upload-font', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fontFamily, filename: file.name, dataBase64 }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Font upload failed');
+        fill.style.width = '100%';
+        currentConfig = data.config;
+        msg.textContent = `Uploaded "${fontFamily}" — it'll show up in font pickers once the site redeploys (~30–60s).`;
+        msg.className = 'msg ok';
+        document.getElementById('fontName').value = '';
+        document.getElementById('fontFile').value = '';
+        populateFontSelects();
+        renderCustomFontsList();
+    } catch (e) {
+        msg.textContent = e.message; msg.className = 'msg err';
+    } finally {
+        setTimeout(() => { track.style.display = 'none'; }, 400);
+    }
+}
+
+async function addSong() {
+    const title = document.getElementById('songTitle').value.trim();
+    const artist = document.getElementById('songArtist').value.trim();
+    const msg = document.getElementById('songsMsg');
+    let id = document.getElementById('songId').value.trim();
+    let cover = document.getElementById('songCover').value.trim();
+    const audioFile = document.getElementById('songAudioFile').files[0];
+    const coverFile = document.getElementById('songCoverFile').files[0];
+
+    if (!title || !artist) {
+        msg.textContent = 'Title and artist are required.'; msg.className = 'msg err';
+        return;
+    }
+    if (!id && !audioFile) {
+        msg.textContent = 'Add an audio file, or a Cloudinary public ID.'; msg.className = 'msg err';
+        return;
+    }
+
+    try {
+        if (audioFile) {
+            msg.textContent = 'Uploading audio...'; msg.className = 'msg';
+            id = await uploadToCloudinary(audioFile, 'video'); // Cloudinary stores audio under the "video" resource type
+        }
+        if (coverFile) {
+            msg.textContent = 'Uploading cover...'; msg.className = 'msg';
+            cover = await uploadToCloudinary(coverFile, 'image');
+        }
+    } catch (e) {
+        msg.textContent = e.message; msg.className = 'msg err';
+        return;
+    }
+
+    const songs = [...(currentConfig.songs || [])];
+    if (editingSongIndex !== null && songs[editingSongIndex]) {
+        songs[editingSongIndex] = { title, artist, id, cover };
+    } else {
+        songs.push({ title, artist, id, cover });
+    }
+    await saveSection('songs', songs, 'songsMsg');
+    editingSongIndex = null;
+    document.getElementById('songSubmitBtn').textContent = 'Add song';
+    document.getElementById('songTitle').value = '';
+    document.getElementById('songArtist').value = '';
+    document.getElementById('songId').value = '';
+    document.getElementById('songCover').value = '';
+    document.getElementById('songAudioFile').value = '';
+    document.getElementById('songCoverFile').value = '';
+}
+
+function removeSong(index) {
+    if (editingSongIndex === index) {
+        editingSongIndex = null;
+        document.getElementById('songSubmitBtn').textContent = 'Add song';
+    }
+    const songs = (currentConfig.songs || []).filter((_, i) => i !== index);
+    saveSection('songs', songs, 'songsMsg');
+}
+
+function addBadge() {
+    const icon = document.getElementById('badgeIcon').value.trim() || '✦';
+    const label = document.getElementById('badgeLabel').value.trim();
+    const color = document.getElementById('badgeColorHex').value.trim();
+    const glow = document.getElementById('badgeGlow').checked;
+    if (!label) {
+        const msg = document.getElementById('badgesMsg');
+        msg.textContent = 'Label is required.'; msg.className = 'msg err';
+        return;
+    }
+    const badges = [...(currentConfig.badges || []), { icon, label, color, glow }];
+    saveSection('badges', badges, 'badgesMsg').then(() => {
+        document.getElementById('badgeIcon').value = '';
+        document.getElementById('badgeLabel').value = '';
+        document.getElementById('badgeGlow').checked = false;
+    });
+}
+
+function removeBadge(index) {
+    const badges = (currentConfig.badges || []).filter((_, i) => i !== index);
+    saveSection('badges', badges, 'badgesMsg');
+}
+
+async function saveDiscordAll() {
+    const msg = document.getElementById('discordMsg');
+    msg.textContent = 'Saving...'; msg.className = 'msg';
+    try {
+        await saveSection('discord', {
+            userId: document.getElementById('discordUserId').value.trim(),
+            enabled: document.getElementById('discordEnabled').checked,
+            showSpotify: document.getElementById('discordShowSpotify').checked,
+            showActivity: document.getElementById('discordShowActivity').checked,
+        }, 'discordMsg');
+        await saveSection('discordWidgets', {
+            profileEnabled: document.getElementById('dwProfileEnabled').checked,
+            serverEnabled: document.getElementById('dwServerEnabled').checked,
+            serverId: document.getElementById('dwServerId').value.trim(),
+            inviteUrl: document.getElementById('dwInviteUrl').value.trim(),
+        }, 'discordMsg');
+        msg.textContent = 'Saved. Site updates in a minute or two.'; msg.className = 'msg ok';
+    } catch (e) {
+        msg.textContent = e.message; msg.className = 'msg err';
+    }
+}
+
+function saveExtras() {
+    saveSection('effects', {
+        scrollReveal: document.getElementById('fxScrollReveal').checked,
+        viewCounter: document.getElementById('fxViewCounter').checked,
+    }, 'extrasMsg');
+}
+
+// try to resume an existing session on load
+(async () => {
+    const res = await fetch('/api/config');
+    if (res.ok) { currentConfig = await res.json(); showDashboard(); }
 })();
 </script>
 </body>
 </html>
-
