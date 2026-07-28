@@ -35,13 +35,6 @@
     "about": "Tormented.",
     "rings": [
       {
-        "emoji": "🧊",
-        "pct": 60,
-        "title": "petrified",
-        "sub": "Dont expect anything from me",
-        "color": "rose"
-      },
-      {
         "emoji": "💤",
         "pct": 40,
         "title": "sleeping",
