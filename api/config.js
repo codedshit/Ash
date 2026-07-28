@@ -1,10 +1,11 @@
-const { verify, getCookie } = require('../lib/session');
+const { verify } = require('../lib/session');
 const { getConfig, updateConfig } = require('../lib/github');
 
 const ALLOWED_SECTIONS = ['theme', 'backgroundVideo', 'identity', 'songs', 'badges', 'discord', 'effects', 'uploads', 'bio', 'socials', 'tabs', 'appearance'];
 
 module.exports = async (req, res) => {
-    const token = getCookie(req, 'session');
+    // Vercel handles cookie parsing natively
+    const token = req.cookies?.session;
     const session = verify(token, process.env.SESSION_SECRET);
     if (!session) return res.status(401).json({ error: 'Not authenticated' });
 
